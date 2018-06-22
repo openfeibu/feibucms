@@ -425,10 +425,13 @@ if (!function_exists('replace_image_url')) {
                 $patterns= array();
                 $replacements = array();
                 foreach($img as $imgItem){
-                    $final_imgUrl = $url.$imgItem;
-                    $replacements[] = $final_imgUrl;
-                    $img_new = "/".preg_replace("/\//i","\/",$imgItem)."/";
-                    $patterns[] = $img_new;
+                    if(strpos($imgItem,'http') === false)
+                    {
+                        $final_imgUrl = $url.$imgItem;
+                        $replacements[] = $final_imgUrl;
+                        $img_new = "/".preg_replace("/\//i","\/",$imgItem)."/";
+                        $patterns[] = $img_new;
+                    }
                 }
                 ksort($patterns);
                 ksort($replacements);
@@ -473,4 +476,13 @@ function get_substr($str,$len= 12, $dot= true) {
         $dot and $re .= '...';
     }
     return $re;
+}
+function handle_image_url($image_url = '',$host = '')
+{
+    $host = $host ? $host : config('app.image_url') . '/';
+    if(!empty($image_url) && strpos($image_url,'http') === false)
+    {
+        $image_url = $host.$image_url;
+    }
+    return $image_url;
 }
