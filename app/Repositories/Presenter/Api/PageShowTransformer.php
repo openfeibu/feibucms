@@ -13,7 +13,7 @@ class PageShowTransformer extends TransformerAbstract
             'name' => $page->name,
             'heading' => $page->heading,
             'title' => $page->title,
-            'description' => $page->description,
+            'description' => $page->description ? $page->description : get_substr(strip_tags($page->content),200),
             'content' => replace_image_url($page->content,config('app.image_url')),
             'image' => $page->image ? config('app.image_url').'/image/original'.$page->image : '',
             //'images' => $page->images,
