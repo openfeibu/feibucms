@@ -43,6 +43,7 @@ Route::group([
 
     Route::group(['prefix' => 'case'], function ($router) {
         Route::resource('case', 'CaseResourceController');
+        Route::post('/case/deleteAll', 'CaseResourceController@destoryAll');
         Route::resource('category', 'CaseCategoryResourceController');
         Route::post('/category/deleteAll', 'CaseCategoryResourceController@destoryAll');
     });

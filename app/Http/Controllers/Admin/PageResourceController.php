@@ -107,6 +107,8 @@ class PageResourceController extends BaseController
             $attributes              = $request->all();
             $attributes['user_id']   = user_id();
             $attributes['user_type'] = user_type();
+//            $attributes['category_id'] = $this->category_id;
+
             $page                 = $this->repository->create($attributes);
 
             return $this->response->message(trans('messages.success.created', ['Module' => trans('page.name')]))
