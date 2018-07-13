@@ -3,6 +3,7 @@
 namespace App\Repositories\Presenter\Api;
 
 use League\Fractal\TransformerAbstract;
+use DB;
 
 class PageShowTransformer extends TransformerAbstract
 {
