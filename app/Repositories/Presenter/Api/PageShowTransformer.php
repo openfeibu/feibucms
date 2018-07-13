@@ -9,7 +9,7 @@ class PageShowTransformer extends TransformerAbstract
 {
     public function transform(\App\Models\Page $page)
     {
-        DB::table('page')->where('id','=',$page->id)->increment('views_count',1);
+        DB::table('pages')->where('id','=',$page->id)->increment('views_count',1);
         return [
             'id' => $page->id,
             'name' => $page->name,
