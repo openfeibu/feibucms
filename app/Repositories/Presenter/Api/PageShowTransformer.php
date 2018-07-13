@@ -8,6 +8,7 @@ class PageShowTransformer extends TransformerAbstract
 {
     public function transform(\App\Models\Page $page)
     {
+        DB::table('page')->where('id','=',$page->id)->increment('views_count',1);
         return [
             'id' => $page->id,
             'name' => $page->name,
@@ -17,7 +18,7 @@ class PageShowTransformer extends TransformerAbstract
             'content' => replace_image_url($page->content,config('app.image_url')),
             'image' => handle_image_url($page->image,config('app.image_url').'/image/original'),
             'date' => $page->updated_at->format('Y-m-d'),
-            'views_count' => $page->views_count,
+            'views_count' => $page->views_count + 1,
             'meta_title' => $page->meta_title,
             'meta_keyword' => $page->meta_keyword,
             'meta_description' => $page->meta_description,
