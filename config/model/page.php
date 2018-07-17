@@ -64,7 +64,7 @@ return [
     ],
     'category' => [
         'model'        => 'App\Models\PageCategory',
-        'table'        => 'page_category',
+        'table'        => 'page_categories',
         'primaryKey'   => 'id',
         'hidden'       => [],
         'visible'      => [],
