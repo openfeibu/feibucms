@@ -39,7 +39,7 @@ class CreatePagesTable extends Migration
             $table->string('upload_folder', 100)->nullable();
             $table->char('recommend_type', 10)->nullable();
             $table->integer('views_count')->default(0)->nullable();
-            $table->foreign('category_id')->references('id')->on('page_category')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('page_categories')->onDelete('cascade');
             $table->softDeletes();
             $table->nullableTimestamps();
         });
