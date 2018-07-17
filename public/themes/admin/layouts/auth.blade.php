@@ -9,11 +9,10 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
-    <link rel="stylesheet" href="{{ asset('css/font.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/xadmin.css') }}">
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <script src="{{ asset('lib/layui/layui.js') }}" charset="utf-8"></script>
-    <script type="text/javascript" src="{{ asset('js/xadmin.js') }}"></script>
+	{!! Theme::asset()->styles() !!}
+     {{--<script src='{{ asset('js/jquery-1.7.2.min.js') }}'></script>--}}
+    {!! Theme::asset()->scripts() !!}
+    {!! Theme::asset()->container('footer')->scripts() !!}
 
 </head>
 <body class="login-bg">
