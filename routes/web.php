@@ -34,7 +34,7 @@ Route::group([
     Route::post('/system_page/deleteAll', 'SystemPageResourceController@destoryAll');
     Route::get('/setting/company', 'SettingResourceController@company');
     Route::post('/setting/updateCompany', 'SettingResourceController@updateCompany');
-    Route::get('/setting/publicityvideo', 'SettingResourceController@publicityVideo');
+    Route::get('/setting/publicityVideo', 'SettingResourceController@publicityVideo');
     Route::post('/setting/updatePublicityVideo', 'SettingResourceController@updatePublicityVideo');
     Route::resource('recruit', 'RecruitResourceController');
     Route::post('/recruit/deleteAll', 'RecruitResourceController@destoryAll');
