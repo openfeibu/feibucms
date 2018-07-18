@@ -2,7 +2,6 @@
     <div class="layui-card fb-minNav">
         <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
             <a href="index.html">主页</a><span lay-separator="">/</span>
-            <a><cite>后台管理员</cite></a><span lay-separator="">/</span>
             <a><cite>添加轮播图</cite></a>
         </div>
     </div>

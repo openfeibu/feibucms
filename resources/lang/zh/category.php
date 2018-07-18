@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'name'        => 'Category',
-    'names'       => 'Categories',
+    'name'        => '分类',
+    'names'       => '分类',
     'label'       => [
-        'name' => 'Name',
+        'name' => '名称',
         'slug' => 'Slug',
         'order' => 'Order',
     ],

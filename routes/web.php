@@ -34,6 +34,8 @@ Route::group([
     Route::post('/system_page/deleteAll', 'SystemPageResourceController@destoryAll');
     Route::get('/setting/company', 'SettingResourceController@company');
     Route::post('/setting/updateCompany', 'SettingResourceController@updateCompany');
+    Route::get('/setting/publicityvideo', 'SettingResourceController@publicityVideo');
+    Route::post('/setting/updatePublicityVideo', 'SettingResourceController@updatePublicityVideo');
     Route::resource('recruit', 'RecruitResourceController');
     Route::post('/recruit/deleteAll', 'RecruitResourceController@destoryAll');
     Route::resource('link', 'LinkResourceController');
@@ -55,6 +57,14 @@ Route::group([
     Route::group(['prefix' => 'menu'], function ($router) {
         Route::get('index', 'MenuResourceController@index');
     });
+
+    Route::group(['prefix' => 'nav'], function ($router) {
+        Route::resource('nav', 'NavResourceController');
+        Route::post('/nav/deleteAll', 'NavResourceController@destoryAll');
+        Route::resource('category', 'NavCategoryResourceController');
+        Route::post('/category/deleteAll', 'NavCategoryResourceController@destoryAll');
+    });
+
     Route::post('/upload/{config}/{path?}', 'UploadController@upload')->where('path', '(.*)');
     Route::get('logout', 'Auth\LoginController@logout');
 });

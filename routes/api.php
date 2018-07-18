@@ -31,5 +31,8 @@ $api->version('v1', function ($api) {
     $api->get('/page-contact','App\Http\Controllers\Api\PageController@getContacts');
     $api->get('/banners','App\Http\Controllers\Api\HomeController@getBanners');
     $api->get('/link','App\Http\Controllers\Api\LinkController@getLinks');
+    $api->get('/nav','App\Http\Controllers\Api\NavController@getNavs');
     $api->post('test','App\Http\Controllers\Api\HomeController@test');
+    $api->get('/link','App\Http\Controllers\Api\LinkController@getLinks');
+    $api->get('/videoVid','App\Http\Controllers\Api\HomeController@getVideoVid');
 });
