@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePageCategoryTable extends Migration
+class CreateNavCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -11,15 +13,10 @@ class CreatePageCategoryTable extends Migration
      */
     public function up()
     {
-
-        /*
-         * Table: pages
-         */
-        Schema::create('page_category', function ($table) {
+        Schema::create('nav_categories', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name', 50)->nullable();
             $table->integer('order')->default(0);
-            $table->integer('parent_id')->default(0);
             $table->string('slug', 200)->nullable();
         });
     }
@@ -31,6 +28,6 @@ class CreatePageCategoryTable extends Migration
      */
     public function down()
     {
-        Schema::drop('categories');
+        Schema::dropIfExists('nav_categories');
     }
 }

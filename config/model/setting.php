@@ -24,6 +24,7 @@ return [
         'slugs'        => ['slug' => 'name'],
         'fillable'     => ['title', 'slug', 'order', 'value', 'type','category'],
         'translate'    => ['title', 'slug', 'order', 'value', 'type','category'],
+        'upload_folder' => '/page/page',
         'encrypt'      => ['id'],
         'revision'     => ['name', 'title'],
         'perPage'      => '20',

@@ -6,6 +6,7 @@ use App\Repositories\Eloquent\PageRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\BaseController;
 use App\Models\Banner;
+use App\Models\Setting;
 use Log;
 
 class HomeController extends BaseController
@@ -40,6 +41,14 @@ class HomeController extends BaseController
         return response()->json([
             'code' => '200',
             'data' => $banners,
+        ]);
+    }
+    public function getVideoVid(Request $request)
+    {
+        $video_vid = Setting::where('slug','video_vid')->value('value');
+        return response()->json([
+            'code' => '200',
+            'data' => $video_vid,
         ]);
     }
     public function test(Request $request)

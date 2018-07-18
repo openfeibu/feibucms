@@ -53,6 +53,14 @@ class AppServiceProvider extends ServiceProvider
             'App\Repositories\Eloquent\LinkRepositoryInterface',
             \App\Repositories\Eloquent\LinkRepository::class
         );
+        $this->app->bind(
+            'App\Repositories\Eloquent\NavRepositoryInterface',
+            \App\Repositories\Eloquent\NavRepository::class
+        );
+        $this->app->bind(
+            'App\Repositories\Eloquent\NavCategoryRepositoryInterface',
+            \App\Repositories\Eloquent\NavCategoryRepository::class
+        );
         $this->app->bind('filer', function ($app) {
             return new \App\Helpers\Filer\Filer();
         });

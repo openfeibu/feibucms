@@ -14,8 +14,13 @@ class CreateNavsTable extends Migration
     public function up()
     {
         Schema::create('navs', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+            $table->increments('id')->unsigned();
+            $table->string('name', 50);
+            $table->string('image');
+            $table->integer('order')->unsign()->default(0);
+            $table->integer('category_id')->unsigned();
+            $table->foreign('category_id')->references('id')->on('nav_categories')->onDelete('cascade');
+            $table->string('url');
         });
     }
 
