@@ -13,7 +13,7 @@ class RecruitListTransformer extends TransformerAbstract
             'title' => $recruit->title,
             'address' => $recruit->address,
             'salary' => $recruit->salary,
-            'image' => $recruit->image,
+            'image' => $recruit->image ? url("/image/original".$recruit->image) : '',
             'requirement' => $recruit->requirement,
             'duty' => $recruit->duty,
         ];

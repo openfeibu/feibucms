@@ -13,9 +13,8 @@ trait RoutesAndGuards
      */
     public function getAuthModel()
     {
-
         $provider = config("auth.guards." . $this->getGuard() . ".provider", 'users');
-        return config("auth.providers.$provider.model", App\User::class);
+        return config("auth.providers.$provider.model", App\Models\AdminUser::class);
     }
 
     /**
