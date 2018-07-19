@@ -18,7 +18,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">链接</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="url" lay-verify="title" autocomplete="off" placeholder="请输入链接" class="layui-input" value="{{$nav->name}}">
+                            <input type="text" name="url" lay-verify="title" autocomplete="off" placeholder="请输入链接" class="layui-input" value="{{$nav->url}}">
                         </div>
                     </div>
                     <div class="layui-form-item">
