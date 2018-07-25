@@ -23,34 +23,34 @@ Route::group([
     Route::get('/', 'ResourceController@home');
     Route::get('/dashboard', 'ResourceController@dashboard');
     Route::resource('banner', 'BannerResourceController');
-    Route::post('/banner/deleteAll', 'BannerResourceController@destoryAll');
+    Route::post('/banner/destroyAll', 'BannerResourceController@destroyAll');
     Route::resource('business', 'BusinessResourceController');
-    Route::post('/business/deleteAll', 'BusinessResourceController@destoryAll');
-    Route::post('/business/updateRecommend', 'BusinessResourceController@updateRecommend');
+    Route::post('/business/destroyAll', 'BusinessResourceController@destroyAll')->name('business.destroy_all');
+    Route::post('/business/updateRecommend', 'BusinessResourceController@updateRecommend')->name('business.update_recommend');
     Route::resource('news', 'NewsResourceController');
-    Route::post('/news/deleteAll', 'NewsResourceController@destoryAll');
-    Route::post('/news/updateRecommend', 'NewsResourceController@updateRecommend');
+    Route::post('/news/destroyAll', 'NewsResourceController@destroyAll')->name('news.destroy_all');
+    Route::post('/news/updateRecommend', 'NewsResourceController@updateRecommend')->name('news.update_recommend');
     Route::resource('system_page', 'SystemPageResourceController');
-    Route::post('/system_page/deleteAll', 'SystemPageResourceController@destoryAll');
+    Route::post('/system_page/destroyAll', 'SystemPageResourceController@destroyAll')->name('system_page.destroy_all');
     Route::get('/setting/company', 'SettingResourceController@company');
     Route::post('/setting/updateCompany', 'SettingResourceController@updateCompany');
     Route::get('/setting/publicityVideo', 'SettingResourceController@publicityVideo');
     Route::post('/setting/updatePublicityVideo', 'SettingResourceController@updatePublicityVideo');
     Route::resource('recruit', 'RecruitResourceController');
-    Route::post('/recruit/deleteAll', 'RecruitResourceController@destoryAll');
+    Route::post('/recruit/destroyAll', 'RecruitResourceController@destroyAll')->name('recruit.destroy_all');
     Route::resource('link', 'LinkResourceController');
-    Route::post('/link/deleteAll', 'LinkResourceController@destoryAll');
+    Route::post('/link/destroyAll', 'LinkResourceController@destroyAll')->name('link.destroy_all');
     Route::resource('permission', 'PermissionResourceController');
     Route::resource('role', 'RoleResourceController');
 
-    Route::group(['prefix' => 'case'], function ($router) {
+    Route::group(['prefix' => 'case','as' => 'case.'], function ($router) {
         Route::resource('case', 'CaseResourceController');
-        Route::post('/case/deleteAll', 'CaseResourceController@destoryAll');
+        Route::post('/case/destroyAll', 'CaseResourceController@destroyAll')->name('case.destroy_all');
         Route::resource('category', 'CaseCategoryResourceController');
-        Route::post('/category/deleteAll', 'CaseCategoryResourceController@destoryAll');
+        Route::post('/category/destroyAll', 'CaseCategoryResourceController@destroyAll')->name('category.destroy_all');
     });
 
-    Route::group(['prefix' => 'page'], function ($router) {
+    Route::group(['prefix' => 'page','as' => 'page.'], function ($router) {
         Route::resource('page', 'PageResourceController');
         Route::resource('category', 'PageCategoryResourceController');
     });
@@ -58,11 +58,11 @@ Route::group([
         Route::get('index', 'MenuResourceController@index');
     });
 
-    Route::group(['prefix' => 'nav'], function ($router) {
+    Route::group(['prefix' => 'nav','as' => 'nav.'], function ($router) {
         Route::resource('nav', 'NavResourceController');
-        Route::post('/nav/deleteAll', 'NavResourceController@destoryAll');
+        Route::post('/nav/destroyAll', 'NavResourceController@destroyAll')->name('nav.destroy_all');
         Route::resource('category', 'NavCategoryResourceController');
-        Route::post('/category/deleteAll', 'NavCategoryResourceController@destoryAll');
+        Route::post('/category/destroyAll', 'NavCategoryResourceController@destroyAll')->name('category.destroy_all');
     });
 
     Route::post('/upload/{config}/{path?}', 'UploadController@upload')->where('path', '(.*)');
