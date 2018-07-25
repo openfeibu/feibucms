@@ -117,7 +117,7 @@ class RecruitResourceController extends BaseController
                 ->redirect();
         }
     }
-    public function destoryAll(Request $request)
+    public function destroyAll(Request $request)
     {
         try {
             $data = $request->all();

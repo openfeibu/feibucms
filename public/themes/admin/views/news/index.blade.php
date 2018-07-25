@@ -37,7 +37,7 @@
 
 <script>
     var main_url = "{{guard_url('news')}}";
-    var delete_all_url = "{{guard_url('news/deleteAll')}}";
+    var delete_all_url = "{{guard_url('news/destroyAll')}}";
     layui.use(['jquery','element','table'], function(){
         var table = layui.table;
         var form = layui.form;

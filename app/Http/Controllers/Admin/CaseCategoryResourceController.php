@@ -107,7 +107,7 @@ class CaseCategoryResourceController extends BaseController
                 ->redirect();
         }
     }
-    public function destoryAll(PageCategoryRequest $request)
+    public function destroyAll(PageCategoryRequest $request)
     {
         try {
             $data = $request->all();

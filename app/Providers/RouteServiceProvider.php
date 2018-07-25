@@ -42,15 +42,15 @@ class RouteServiceProvider extends ServiceProvider
             });
         }
         if (Request::is('*/page/page/*')) {
-            Route::bind('page', function ($id) {
+            Route::bind('page', function ($page) {
                 $page = $this->app->make(\App\Repositories\Eloquent\PageRepositoryInterface::class);
-                return $page->findOrNew($id);
+                return $page->findOrNew($page);
             });
         }
         if (Request::is('*/page/category/*')) {
-            Route::bind('category', function ($id) {
+            Route::bind('category', function ($category) {
                 $category = $this->app->make(\App\Repositories\Eloquent\PageCategoryRepositoryInterface::class);
-                return $category->findOrNew($id);
+                return $category->findOrNew($category);
             });
         }
 

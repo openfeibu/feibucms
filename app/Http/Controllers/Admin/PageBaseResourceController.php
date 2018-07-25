@@ -144,7 +144,7 @@ class PageBaseResourceController extends BaseController
                 ->redirect();
         }
     }
-    public function destoryAll(PageRequest $request)
+    public function destroyAll(PageRequest $request)
     {
         try {
             $data = $request->all();

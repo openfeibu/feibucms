@@ -33,7 +33,7 @@
 </script>
 <script>
     var main_url = "{{guard_url('banner')}}";
-    var delete_all_url = "{{guard_url('banner/deleteAll')}}";
+    var delete_all_url = "{{guard_url('banner/destroyAll')}}";
     layui.use(['jquery','element','table'], function(){
         var $ = layui.$;
         var table = layui.table;

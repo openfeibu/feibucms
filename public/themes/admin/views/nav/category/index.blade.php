@@ -35,7 +35,7 @@
 </script>
 <script>
     var main_url = "{{guard_url('nav/category')}}";
-    var delete_all_url = "{{guard_url('nav/category/deleteAll')}}";
+    var delete_all_url = "{{guard_url('nav/category/destroyAll')}}";
 
     layui.use(['element','table'], function(){
         var table = layui.table;
