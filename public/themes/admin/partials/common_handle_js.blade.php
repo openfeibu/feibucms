@@ -36,15 +36,17 @@
         var $ = layui.$, active = {
             reload: function(){
                 var demoReload = $('#demoReload');
-
+                var where = {};
+                $(".search_key").each(function(){
+                    var name = $(this).attr('name');
+                    where["search["+name+"]"] = $(this).val();
+                });
                 //执行重载
                 table.reload('fb-table', {
                     page: {
                         curr: 1 //重新从第 1 页开始
                     }
-                    ,where: {
-                        'search[title]': demoReload.val()
-                    }
+                    ,where: where
                 });
             },
             del:function(){

@@ -20,8 +20,8 @@ Route::group([
     'prefix' => set_route_guard('web')
 ], function () {
     Auth::routes();
-    Route::get('/', 'ResourceController@home');
-    Route::get('/dashboard', 'ResourceController@dashboard');
+    Route::get('/', 'ResourceController@home')->name('home');
+    Route::get('/dashboard', 'ResourceController@dashboard')->name('dashboard');
     Route::resource('banner', 'BannerResourceController');
     Route::post('/banner/destroyAll', 'BannerResourceController@destroyAll');
     Route::resource('business', 'BusinessResourceController');
@@ -32,9 +32,9 @@ Route::group([
     Route::post('/news/updateRecommend', 'NewsResourceController@updateRecommend')->name('news.update_recommend');
     Route::resource('system_page', 'SystemPageResourceController');
     Route::post('/system_page/destroyAll', 'SystemPageResourceController@destroyAll')->name('system_page.destroy_all');
-    Route::get('/setting/company', 'SettingResourceController@company');
+    Route::get('/setting/company', 'SettingResourceController@company')->name('setting.company.index');
     Route::post('/setting/updateCompany', 'SettingResourceController@updateCompany');
-    Route::get('/setting/publicityVideo', 'SettingResourceController@publicityVideo');
+    Route::get('/setting/publicityVideo', 'SettingResourceController@publicityVideo')->name('setting.publicity_video.index');
     Route::post('/setting/updatePublicityVideo', 'SettingResourceController@updatePublicityVideo');
     Route::resource('recruit', 'RecruitResourceController');
     Route::post('/recruit/destroyAll', 'RecruitResourceController@destroyAll')->name('recruit.destroy_all');
@@ -66,6 +66,13 @@ Route::group([
     });
 
     Route::post('/upload/{config}/{path?}', 'UploadController@upload')->where('path', '(.*)');
+
+    Route::resource('admin_user', 'AdminUserResourceController');
+    Route::post('/admin_user/destroyAll', 'AdminUserResourceController@destroyAll')->name('admin_user.destroy_all');
+    Route::resource('permission', 'PermissionResourceController');
+    Route::post('/permission/destroyAll', 'PermissionResourceController@destroyAll')->name('permission.destroy_all');
+    Route::resource('role', 'RoleResourceController');
+    Route::post('/role/destroyAll', 'RoleResourceController@destroyAll')->name('role.destroy_all');
     Route::get('logout', 'Auth\LoginController@logout');
 });
 

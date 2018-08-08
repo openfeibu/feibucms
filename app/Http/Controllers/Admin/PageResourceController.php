@@ -183,7 +183,7 @@ class PageResourceController extends BaseController
     {
         try {
 
-            $page->delete();
+            $page->forceDelete();
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('page.name')]))
                 ->code(202)
                 ->status('success')
@@ -217,7 +217,7 @@ class PageResourceController extends BaseController
             if ($type == 'purge') {
                 $this->repository->purge($ids);
             } else {
-                $this->repository->delete($ids);
+                $this->repository->forceDelete($ids);
             }
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('page.name')]))

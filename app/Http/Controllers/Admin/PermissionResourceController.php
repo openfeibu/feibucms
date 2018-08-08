@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Tree,Auth;
 use App\Http\Controllers\Admin\ResourceController as BaseController;
-use App\Http\Requests\Roles\PermissionRequest;
+use App\Http\Requests\PermissionRequest;
 use App\Repositories\Eloquent\PermissionRepositoryInterface;
 use App\Models\Permission;
 /**
@@ -29,50 +30,42 @@ class PermissionResourceController extends BaseController
     }
 
     /**
-     * Display a list of permission.
-     *
-     * @return Response
+     * @param PermissionRequest $request
+     * @return mixed
      */
     public function index(PermissionRequest $request)
     {
-
         if ($this->response->typeIs('json')) {
-            $pageLimit = $request->input('pageLimit');
-            $data      = $this->repository
-                ->setPresenter(\Litepie\Roles\Repositories\Presenter\PermissionListPresenter::class)
-                ->getDataTable($pageLimit);
+            $data = $this->repository->orderBy('order','asc')->orderBy('id','asc')->all()->toArray();
+            $data = Tree::getTree($data);
             return $this->response
+                ->success()
                 ->data($data)
                 ->output();
         }
 
-        $permissions = $this->repository->paginate();
-
-        return $this->response->title(trans('roles::permission.names'))
-            ->view('roles::permission.index', true)
-            ->data(compact('permissions'))
+        return $this->response->title(trans('permission.names'))
+            ->view('permission.index', true)
             ->output();
     }
 
     /**
-     * Display permission.
-     *
-     * @param Request $request
-     * @param Model   $permission
-     *
-     * @return Response
+     * @param PermissionRequest $request
+     * @param Permission $permission
+     * @return mixed
      */
     public function show(PermissionRequest $request, Permission $permission)
     {
 
         if ($permission->exists) {
-            $view = 'roles::permission.show';
+            $view = 'permission.show';
         } else {
-            $view = 'roles::permission.new';
+            $view = 'permission.new';
         }
+        $father = Auth::user()->menus();
 
-        return $this->response->title(trans('app.view') . ' ' . trans('roles::permission.name'))
-            ->data(compact('permission'))
+        return $this->response->title(trans('app.view') . ' ' . trans('permission.name'))
+            ->data(compact('permission','father'))
             ->view($view, true)
             ->output();
     }
@@ -80,24 +73,25 @@ class PermissionResourceController extends BaseController
     /**
      * Show the form for creating a new permission.
      *
-     * @param Request $request
+     * @param PermissionRequest $request
      *
      * @return Response
      */
     public function create(PermissionRequest $request)
     {
-
         $permission = $this->repository->newInstance([]);
-        return $this->response->title(trans('app.new') . ' ' . trans('roles::permission.name')) 
-            ->view('roles::permission.create', true) 
-            ->data(compact('permission'))
+        $father = Auth::user()->menus();
+
+        return $this->response->title(trans('app.new') . ' ' . trans('permission.name')) 
+            ->view('permission.create', true) 
+            ->data(compact('permission','father'))
             ->output();
     }
 
     /**
      * Create new permission.
      *
-     * @param Request $request
+     * @param PermissionRequest $request
      *
      * @return Response
      */
@@ -109,16 +103,16 @@ class PermissionResourceController extends BaseController
             $attributes['user_type'] = user_type();
             $permission                 = $this->repository->create($attributes);
 
-            return $this->response->message(trans('messages.success.created', ['Module' => trans('roles::permission.name')]))
+            return $this->response->message(trans('messages.success.created', ['Module' => trans('permission.name')]))
                 ->code(204)
                 ->status('success')
-                ->url(guard_url('roles/permission/' . $permission->getRouteKey()))
+                ->url(guard_url('permission/' . $permission->id))
                 ->redirect();
         } catch (Exception $e) {
             return $this->response->message($e->getMessage())
                 ->code(400)
                 ->status('error')
-                ->url(guard_url('/roles/permission'))
+                ->url(guard_url('/permission'))
                 ->redirect();
         }
 
@@ -127,15 +121,15 @@ class PermissionResourceController extends BaseController
     /**
      * Show permission for editing.
      *
-     * @param Request $request
-     * @param Model   $permission
+     * @param PermissionRequest $request
+     * @param Permission   $permission
      *
      * @return Response
      */
     public function edit(PermissionRequest $request, Permission $permission)
     {
-        return $this->response->title(trans('app.edit') . ' ' . trans('roles::permission.name'))
-            ->view('roles::permission.edit', true)
+        return $this->response->title(trans('app.edit') . ' ' . trans('permission.name'))
+            ->view('permission.edit', true)
             ->data(compact('permission'))
             ->output();
     }
@@ -143,8 +137,8 @@ class PermissionResourceController extends BaseController
     /**
      * Update the permission.
      *
-     * @param Request $request
-     * @param Model   $permission
+     * @param PermissionRequest $request
+     * @param Permission   $permission
      *
      * @return Response
      */
@@ -154,37 +148,35 @@ class PermissionResourceController extends BaseController
             $attributes = $request->all();
 
             $permission->update($attributes);
-            return $this->response->message(trans('messages.success.updated', ['Module' => trans('roles::permission.name')]))
-                ->code(204)
+            return $this->response->message(trans('messages.success.updated', ['Module' => trans('permission.name')]))
+                ->code(0)
                 ->status('success')
-                ->url(guard_url('roles/permission/' . $permission->getRouteKey()))
+                ->url(guard_url('permission/' . $permission->id))
                 ->redirect();
         } catch (Exception $e) {
             return $this->response->message($e->getMessage())
                 ->code(400)
                 ->status('error')
-                ->url(guard_url('roles/permission/' . $permission->getRouteKey()))
+                ->url(guard_url('permission/' . $permission->id))
                 ->redirect();
         }
 
     }
 
     /**
-     * Remove the permission.
-     *
-     * @param Model   $permission
-     *
-     * @return Response
+     * @param PermissionRequest $request
+     * @param Permission $permission
+     * @return mixed
      */
     public function destroy(PermissionRequest $request, Permission $permission)
     {
         try {
 
-            $permission->delete();
-            return $this->response->message(trans('messages.success.deleted', ['Module' => trans('roles::permission.name')]))
-                ->code(202)
+            $permission->forceDelete();
+            return $this->response->message(trans('messages.success.deleted', ['Module' => trans('permission.name')]))
+                ->code(0)
                 ->status('success')
-                ->url(guard_url('roles/permission/0'))
+                ->url(guard_url('permission'))
                 ->redirect();
 
         } catch (Exception $e) {
@@ -192,34 +184,27 @@ class PermissionResourceController extends BaseController
             return $this->response->message($e->getMessage())
                 ->code(400)
                 ->status('error')
-                ->url(guard_url('roles/permission/' . $permission->getRouteKey()))
+                ->url(guard_url('permission/' . $permission->id))
                 ->redirect();
         }
 
     }
 
     /**
-     * Remove multiple permission.
-     *
-     * @param Model   $permission
-     *
-     * @return Response
+     * @param PermissionRequest $request
+     * @return mixed
      */
-    public function delete(PermissionRequest $request, $type)
+    public function destroyAll(PermissionRequest $request)
     {
         try {
-            $ids = hashids_decode($request->input('ids'));
+            $data = $request->all();
+            $ids = $data['ids'];
+            $this->repository->forceDelete($ids);
 
-            if ($type == 'purge') {
-                $this->repository->purge($ids);
-            } else {
-                $this->repository->delete($ids);
-            }
-
-            return $this->response->message(trans('messages.success.deleted', ['Module' => trans('roles::permission.name')]))
+            return $this->response->message(trans('messages.success.deleted', ['Module' => trans('permission.name')]))
                 ->status("success")
                 ->code(202)
-                ->url(guard_url('roles/permission/0'))
+                ->url(guard_url('permission'))
                 ->redirect();
 
         } catch (Exception $e) {
@@ -227,40 +212,9 @@ class PermissionResourceController extends BaseController
             return $this->response->message($e->getMessage())
                 ->status("error")
                 ->code(400)
-                ->url(guard_url('/roles/permission'))
+                ->url(guard_url('permission'))
                 ->redirect();
         }
-
-    }
-
-    /**
-     * Restore deleted permissions.
-     *
-     * @param Model   $permission
-     *
-     * @return Response
-     */
-    public function restore(PermissionRequest $request)
-    {
-        try {
-            $ids = hashids_decode($request->input('ids'));
-            $this->repository->restore($ids);
-
-            return $this->response->message(trans('messages.success.restore', ['Module' => trans('roles::permission.name')]))
-                ->status("success")
-                ->code(202)
-                ->url(guard_url('/roles/permission'))
-                ->redirect();
-
-        } catch (Exception $e) {
-
-            return $this->response->message($e->getMessage())
-                ->status("error")
-                ->code(400)
-                ->url(guard_url('/roles/permission/'))
-                ->redirect();
-        }
-
     }
 
 }

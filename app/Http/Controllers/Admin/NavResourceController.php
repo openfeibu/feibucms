@@ -182,7 +182,7 @@ class NavResourceController extends BaseController
     public function destroy(Request $request,Nav $nav)
     {
         try {
-            $this->repository->delete([$nav->id]);
+            $this->repository->forceDelete([$nav->id]);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('nav.name')]))
                 ->status("success")
@@ -204,7 +204,7 @@ class NavResourceController extends BaseController
         try {
             $data = $request->all();
             $ids = $data['ids'];
-            $this->repository->delete($ids);
+            $this->repository->forceDelete($ids);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('nav.name')]))
                 ->status("success")

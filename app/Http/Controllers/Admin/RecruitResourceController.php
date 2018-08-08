@@ -100,7 +100,7 @@ class RecruitResourceController extends BaseController
     public function destroy(Request $request,Recruit $recruit)
     {
         try {
-            $this->repository->delete([$recruit->id]);
+            $this->repository->forceDelete([$recruit->id]);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('recruit.name')]))
                 ->status("success")
@@ -122,7 +122,7 @@ class RecruitResourceController extends BaseController
         try {
             $data = $request->all();
             $ids = $data['ids'];
-            $this->repository->delete($ids);
+            $this->repository->forceDelete($ids);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('recruit.name')]))
                 ->status("success")

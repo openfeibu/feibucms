@@ -127,7 +127,7 @@ class PageBaseResourceController extends BaseController
     public function destroy(PageRequest $request,Page $page)
     {
         try {
-            $this->repository->delete([$page->id]);
+            $this->repository->forceDelete([$page->id]);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans($this->category_name.'.name')]))
                 ->status("success")
@@ -149,7 +149,7 @@ class PageBaseResourceController extends BaseController
         try {
             $data = $request->all();
             $ids = $data['ids'];
-            $this->repository->delete($ids);
+            $this->repository->forceDelete($ids);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans($this->category_name.'.name')]))
                 ->status("success")

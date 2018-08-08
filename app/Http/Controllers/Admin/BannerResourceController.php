@@ -107,7 +107,7 @@ class BannerResourceController extends BaseController
     public function destroy(Request $request,Banner $banner)
     {
         try {
-            $banner->delete();
+            $banner->forceDelete();
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('banner.name')]))
                 ->status("success")
@@ -129,7 +129,7 @@ class BannerResourceController extends BaseController
         try {
             $data = $request->all();
             $ids = $data['ids'];
-            $this->repository->delete($ids);
+            $this->repository->forceDelete($ids);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('banner.name')]))
                 ->status("success")

@@ -55,7 +55,7 @@ return [
             'slugs'                 => ['slug' => 'name'],
             'dates'                 => ['deleted_at'],
             'appends'               => [],
-            'fillable'              => ['name',  'slug',  'description'],
+            'fillable'              => ['parent_id', 'name', 'slug', 'icon', 'is_menu',  'description', 'order'],
             'translatables'         => [],
             'upload_folder'         => 'roles/permission',
             'uploads'               => [],
@@ -98,7 +98,7 @@ return [
     |
      */
     'pretend'    => [
-        'enabled' => true,
+        'enabled' => false,
         'options' => [
             'is'      => true,
             'can'     => true,

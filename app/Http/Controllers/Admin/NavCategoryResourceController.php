@@ -84,7 +84,7 @@ class NavCategoryResourceController extends BaseController
     public function destroy(Request $request,NavCategory $category)
     {
         try {
-            $this->repository->delete([$category->id]);
+            $this->repository->forceDelete([$category->id]);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('category.name')]))
                 ->success()
@@ -105,7 +105,7 @@ class NavCategoryResourceController extends BaseController
         try {
             $data = $request->all();
             $ids = $data['ids'];
-            $this->repository->delete($ids);
+            $this->repository->forceDelete($ids);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('category.name')]))
                 ->success()

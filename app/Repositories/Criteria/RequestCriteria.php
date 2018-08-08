@@ -91,6 +91,7 @@ class RequestCriteria implements CriteriaInterface
                         $condition = trim(strtolower($condition));
 
                         if (isset($searchData[$field])) {
+
                             $value = $searchData[$field];
 
                             if (in_array($condition, ['=', '>', '>=', '<', '<=', '!=', '<>'])) {

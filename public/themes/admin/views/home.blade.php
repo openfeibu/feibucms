@@ -9,10 +9,12 @@
                         <div carousel-item="">
                             <ul class="layui-row fb-clearfix ">
                                 <li class="layui-col-xs3">
+                                    @permission(home())
                                     <a lay-href="" class="fb-backlog-body">
                                         <h3>会员量</h3>
                                         <p><cite>66</cite></p>
                                     </a>
+                                    @endpermission
                                 </li>
                                 <li class="layui-col-xs3">
                                     <a lay-href="" class="fb-backlog-body">

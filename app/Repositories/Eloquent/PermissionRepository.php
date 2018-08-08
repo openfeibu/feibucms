@@ -2,8 +2,11 @@
 
 namespace App\Repositories\Eloquent;
 
+use Route,Auth;
+use Illuminate\Support\Collection;
 use App\Repositories\Eloquent\PermissionRepositoryInterface;
 use App\Repositories\Eloquent\BaseRepository;
+
 
 class PermissionRepository extends BaseRepository implements PermissionRepositoryInterface
 {
@@ -100,5 +103,52 @@ class PermissionRepository extends BaseRepository implements PermissionRepositor
             })
             ->get();
     }
+    /**
+     * Permission Menus
+     * @return array
+     */
+    public function menus()
+    {
+        $menus = [];
+        $father = Auth::user()->menus();
 
+        if($father) {
+            foreach ($father as $item) {
+                $active = ($item->slug == Route::currentRouteName()) ? true : false;
+                $sub = Auth::user()->menus($item->id);
+
+                if(!$sub->isEmpty())
+                {
+                    foreach ($sub as $key => $sub_item)
+                    {
+                        $sub_item->active = $sub_item->slug == Route::currentRouteName() ? true : false;
+                        $active ? true : $active  = $sub_item->active;
+                    }
+                    $item->sub = $sub;
+                }
+
+                $item->active = $active;
+                $menus[] = $item;
+            }
+        }
+
+        return $menus;
+    }
+    public function permissions($parent_id = 0)
+    {
+        return $this->model->where('parent_id', $parent_id)->orderBy('order', 'asc')->orderBy('id', 'asc')->get();
+    }
+
+    public function allPermissions()
+    {
+        $permissions = collect();
+        $father = $this->permissions();
+        foreach ($father as $key => $item)
+        {
+            $sub = $this->permissions($item->id);
+            $sub->isEmpty() ? '' : $item->sub = $sub;
+            $permissions[$item->id] = $item;
+        }
+        return $permissions;
+    }
 }

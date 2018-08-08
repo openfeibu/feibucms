@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class RolesServiceProvider extends ServiceProvider
@@ -50,7 +52,8 @@ class RolesServiceProvider extends ServiceProvider
             'App\Repositories\Eloquent\PermissionRepositoryInterface',
             \App\Repositories\Eloquent\PermissionRepository::class
         );
-                
+
+        $this->registerBladeExtensions();
     }
 
     /**
@@ -90,11 +93,11 @@ class RolesServiceProvider extends ServiceProvider
             return "<?php endif; ?>";
         });
 
-        $blade->directive('permission', function ($expression) {
+        \Blade::directive('permission', function ($expression) {
             return "<?php if (Auth::check() && Auth::user()->can{$expression}): ?>";
         });
 
-        $blade->directive('endpermission', function () {
+        \Blade::directive('endpermission', function () {
             return "<?php endif; ?>";
         });
 

@@ -176,12 +176,35 @@ trait HasRoleAndPermission
             throw new InvalidArgumentException('[model.roles.permission.model.model] must be an instance of \Illuminate\Database\Eloquent\Model');
         }
 
-        return $permissionModel::select(['permissions.slug', 'permission_role.created_at as pivot_created_at', 'permission_role.updated_at as pivot_updated_at'])
+        return $permissionModel::select(['permissions.slug', 'permissions.name'])
             ->join('permission_role', 'permission_role.permission_id', '=', 'permissions.id')
             ->join('roles', 'roles.id', '=', 'permission_role.role_id')
             ->whereIn('roles.id', $this->getRoles()->pluck('id')->toArray())
             ->orWhere('roles.level', '<', $this->level())
-            ->groupBy(['permissions.slug', 'pivot_created_at', 'pivot_updated_at']);
+            ->groupBy(['permissions.slug']);
+    }
+
+    public function menus($parent_id = 0)
+    {
+        $permissionModel = app(config('model.roles.permission.model.model'));
+
+        if (!$permissionModel instanceof Model) {
+            throw new InvalidArgumentException('[model.roles.permission.model.model] must be an instance of \Illuminate\Database\Eloquent\Model');
+        }
+
+        if($this->isSuperuser())
+        {
+            return $permissionModel::where('parent_id', $parent_id)->where('is_menu', 1)->orderBy('order', 'asc')->orderBy('id', 'asc')->get();
+        }
+        return $permissionModel::select(['permissions.slug', 'permissions.name'])
+            ->join('permission_role', 'permission_role.permission_id', '=', 'permissions.id')
+            ->join('roles', 'roles.id', '=', 'permission_role.role_id')
+            ->where('is_menu', 1)
+            ->where('parent_id', $parent_id)
+            ->whereIn('roles.id', $this->getRoles()->pluck('id')->toArray())
+            ->orWhere('roles.level', '<', $this->level())
+            ->groupBy(['permissions.slug'])
+            ->get();
     }
 
     /**
@@ -191,6 +214,7 @@ trait HasRoleAndPermission
      */
     public function userPermissions()
     {
+        return null;
         return $this->belongsToMany(config('model.roles.permission.model.model'))->withTimestamps();
     }
 
@@ -201,6 +225,7 @@ trait HasRoleAndPermission
      */
     public function getPermissions()
     {
+        return (!$this->permissions) ? $this->permissions = $this->rolePermissions()->get() : $this->permissions;
         return (!$this->permissions) ? $this->permissions = $this->rolePermissions()->get()->merge($this->userPermissions()->get()) : $this->permissions;
     }
 
@@ -224,6 +249,25 @@ trait HasRoleAndPermission
 
         return $this->{$this->getMethodName('can', $all)}
         ($permission);
+    }
+    /**
+     * Check if the user has a permission or permissions.
+     *
+     * @param int|string|array $permission
+     * @return bool
+     */
+    public function checkPermission($permission)
+    {
+
+        if ($this->isPretendEnabled()) {
+            return $this->pretend('can');
+        }
+
+        if ($this->isSuperuser()) {
+            return true;
+        }
+
+        return $this->canOne($permission);
     }
 
     /**
@@ -421,7 +465,6 @@ trait HasRoleAndPermission
      */
     public function __call($method, $parameters)
     {
-
         if (starts_with($method, 'is')) {
             return $this->hasRole(snake_case(substr($method, 2), config('model.roles.separator', '.')));
         } elseif (starts_with($method, 'can')) {
@@ -429,7 +472,6 @@ trait HasRoleAndPermission
         } elseif (starts_with($method, 'allowed')) {
             return $this->allowed(snake_case(substr($method, 7), config('model.roles.separator', '.')), $parameters[0], (isset($parameters[1])) ? $parameters[1] : true, (isset($parameters[2])) ? $parameters[2] : 'user_id');
         }
-
         return parent::__call($method, $parameters);
     }
 

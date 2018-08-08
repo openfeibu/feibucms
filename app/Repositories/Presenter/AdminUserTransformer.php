@@ -10,7 +10,8 @@ class AdminUserTransformer extends TransformerAbstract
     public function transform(\App\Models\AdminUser $user)
     {
         return [
-            'id'                => $user->getRouteKey(),
+            //'id'                => $user->getRouteKey(),
+            'id' => $user->id,
             'name'              => $user->name,
             'email'             => $user->email,
             'parent_id'         => $user->parent_id,
@@ -31,6 +32,8 @@ class AdminUserTransformer extends TransformerAbstract
             'web'               => $user->web,
             'permissions'       => $user->permissions,
             'status'            => $user->status,
+            'roles' => $user->roles,
+            'role_names' => implode('，',$user->roles->pluck('name')->all()),
             'created_at'        => format_date($user->created_at),
             'updated_at'        => format_date($user->updated_at),
         ];

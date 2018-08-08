@@ -91,7 +91,7 @@ class CaseCategoryResourceController extends BaseController
     public function destroy(PageCategoryRequest $request,PageCategory $category)
     {
         try {
-            $this->repository->delete([$category->id]);
+            $this->repository->forceDelete([$category->id]);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('category.name')]))
                 ->success()
@@ -112,7 +112,7 @@ class CaseCategoryResourceController extends BaseController
         try {
             $data = $request->all();
             $ids = $data['ids'];
-            $this->repository->delete($ids);
+            $this->repository->forceDelete($ids);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('category.name')]))
                 ->success()

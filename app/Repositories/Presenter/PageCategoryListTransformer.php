@@ -12,7 +12,7 @@ class PageCategoryListTransformer extends TransformerAbstract
             'id'      => $category->id,
             'slug'    => $category->slug,
             'name'    => $category->name,
-            'sort'    => $category->sort,
+            'order'    => $category->order,
             'parent_id'     => $category->parent_id,
         ];
     }

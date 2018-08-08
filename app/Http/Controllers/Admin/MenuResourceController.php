@@ -193,7 +193,7 @@ class MenuResourceController extends BaseController
 
         try {
 
-            $menu->delete();
+            $menu->forceDelete();
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('menu::menu.name')]))
                 ->code(202)
                 ->status('success')

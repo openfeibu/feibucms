@@ -2,7 +2,7 @@
     <div class="layui-card fb-minNav">
         <div class="layui-breadcrumb" lay-filter="breadcrumb" style="visibility: visible;">
             <a href="index.html">主页</a><span lay-separator="">/</span>
-            <a><cite>案例分类管理</cite></a>
+            <a><cite>{{ trans('permission.name') }}管理</cite></a>
         </div>
     </div>
 
@@ -10,7 +10,7 @@
         <div class="layui-col-md12">
             <div class="tabel-message">
                 <div class="layui-inline tabel-btn">
-                    <button class="layui-btn layui-btn-warm " data-type="add" data-events="add">添加分类</button>
+                    <button class="layui-btn layui-btn-warm "><a href="{{guard_url('permission/create')}}">添加{{ trans('permission.name') }}</a></button>
                     <button class="layui-btn layui-btn-primary " data-type="del" data-events="del">删除</button>
                 </div>
             </div>
@@ -22,15 +22,15 @@
     </div>
 </div>
 <script type="text/html" id="barDemo">
-
+    <a class="layui-btn layui-btn-sm" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del">删除</a>
 </script>
-<script type="text/html" id="imageTEM">
-    <img src="@{{d.image}}" alt="" height="28">
+<script type="text/html" id="checkboxTEM">
+    <input type="checkbox" name="is_menu" value="@{{d.id}}" lay-skin="switch" lay-text="菜单|否" lay-filter="lock" @{{ d.is_menu == 1 ? 'checked' : '' }}>
 </script>
 <script>
-    var main_url = "{{guard_url('case/category')}}";
-    var delete_all_url = "{{guard_url('case/category/destroyAll')}}";
+    var main_url = "{{guard_url('permission')}}";
+    var delete_all_url = "{{guard_url('permission/destroyAll')}}";
 
     layui.use(['element','table'], function(){
         var table = layui.table;
@@ -41,7 +41,11 @@
             ,cols: [[
                 {checkbox: true, fixed: true}
                 ,{field:'id',title:'ID', width:80, sort: true}
-                ,{field:'name',title:'分类名称',edit: 'text', minWidth:100}
+                ,{field:'name',title:'{{ trans('permission.label.name') }}',edit: 'text', minWidth:100}
+                ,{field:'slug',title:'{{ trans('permission.label.slug') }}',edit: 'text', minWidth:100}
+                ,{field:'icon',title:'{{ trans('permission.label.icon') }}',edit: 'text', minWidth:100}
+                ,{field:'order',title:'{{ trans('permission.label.order') }}',edit: 'text'}
+                ,{field:'is_menu',title:'是否菜单', width:200,toolbar:'#checkboxTEM' }
                 ,{field:'score',title:'操作', width:200, align: 'right',toolbar:'#barDemo'}
             ]]
             ,id: 'fb-table'
@@ -72,6 +76,8 @@
                         }
                     });
                 });
+            } else if(obj.event === 'edit'){
+                window.location.href=main_url+'/'+data.id
             }
         });
         table.on('edit(fb-table)', function(obj){
@@ -79,12 +85,14 @@
             var value = obj.value //得到修改后的值
                     ,data = obj.data //得到所在行所有键值
                     ,field = obj.field; //得到字段
-            data['_token'] = "{!! csrf_token() !!}";
+            var ajax_data = {};
+            ajax_data['_token'] = "{!! csrf_token() !!}";
+            ajax_data[field] = value;
             // 加载样式
             var load = layer.load();
             $.ajax({
                 url : main_url+'/'+data.id,
-                data : {'name':value,'_token':"{!! csrf_token() !!}"},
+                data : ajax_data,
                 type : 'PUT',
                 success : function (data) {
                     layer.close(load);
@@ -142,40 +150,32 @@
                             });
                         })  ;
 
-            },
-            add:function(){
-                layer.prompt({
-                    formType: 0,
-                    value: '',
-                    title: '提示',
-                }, function(value, index, elem){
-                    layer.close(index);
-                    // 加载样式
-                    var load = layer.load();
-                    $.ajax({
-                        url : main_url,
-                        data : {'name':value,'_token':"{!! csrf_token() !!}"},
-                        type : 'POST',
-                        success : function (data) {
-                            layer.close(load);
-                            var nPage = $(".layui-laypage-curr em").eq(1).text();
-                            //执行重载
-                            table.reload('fb-table', {
-
-                            });
-                        },
-                        error : function (jqXHR, textStatus, errorThrown) {
-                            layer.close(load);
-                            layer.msg('服务器出错');
-                        }
-                    });
-                });
-
             }
         };
         $('.tabel-message .layui-btn').on('click', function(){
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
+        });
+        //监听锁定
+        form.on('switch(lock)', function(obj){
+            var is_menu = 0;
+            if(obj.elem.checked)
+            {
+                is_menu = 1;
+            }
+            $.ajax({
+                url : main_url+'/'+this.value,
+                data : {'is_menu' : is_menu , '_token' : "{!! csrf_token() !!}"},
+                type : 'PUT',
+                success : function (data) {
+                    //layer.close(load);
+                },
+                error : function (jqXHR, textStatus, errorThrown) {
+                    //layer.close(load);
+                    //layer.msg('服务器出错');
+                }
+            });
+            // layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
         });
     });
 </script>

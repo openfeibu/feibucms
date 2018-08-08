@@ -13,7 +13,7 @@
                     <button class="layui-btn layui-btn-primary " data-type="del" data-events="del">删除</button>
                 </div>
                 <div class="layui-inline">
-                    <input class="layui-input" name="title" id="demoReload" placeholder="搜索标题" autocomplete="off">
+                    <input class="layui-input search_key" name="title" id="demoReload" placeholder="搜索标题" autocomplete="off">
                 </div>
                 <button class="layui-btn" data-type="reload">搜索</button>
             </div>

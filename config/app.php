@@ -162,7 +162,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\HashidsServiceProvider::class,
         App\Providers\AdminUserServiceProvider::class,
-        //App\Providers\RolesServiceProvider::class,
+        App\Providers\RolesServiceProvider::class,
         App\Providers\TransServiceProvider::class,
         App\Providers\FormServiceProvider::class,
         App\Providers\ThemeServiceProvider::class,

@@ -169,6 +169,11 @@ abstract class BaseRepository extends PrettusRepository implements RepositoryInt
         return $this->model->onlyTrashed()->whereIn('id', $ids)->forceDelete();
     }
 
+    public function forceDelete($ids)
+    {
+        return $this->model->whereIn('id', $ids)->forceDelete();
+    }
+
     /**
      * Restore multiple records
      *

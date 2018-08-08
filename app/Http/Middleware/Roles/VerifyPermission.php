@@ -17,7 +17,7 @@ class VerifyPermission
      * Create a new filter instance.
      *
      * @param \Illuminate\Interfaces\Auth\Guard $auth
-     * @return void
+     *
      */
     public function __construct(Guard $auth)
     {
@@ -35,7 +35,7 @@ class VerifyPermission
      */
     public function handle($request, Closure $next, $permission)
     {
-        if ($this->auth->check() && $this->auth->user()->can($permission)) {
+        if ($this->auth->check() && $this->auth->user()->checkPermission($permission)) {
             return $next($request);
         }
 

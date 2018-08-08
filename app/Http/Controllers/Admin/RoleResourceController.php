@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\ResourceController as BaseController;
 use App\Http\Requests\RoleRequest;
+use Illuminate\Http\Request;
 use App\Repositories\Eloquent\PermissionRepositoryInterface;
 use App\Repositories\Eloquent\RoleRepositoryInterface;
 use App\Models\Role;
@@ -35,48 +36,48 @@ class RoleResourceController extends BaseController
 
     /**
      * Display a list of role.
-     *
+     * @param RoleRequest $request
      * @return Response
      */
     public function index(RoleRequest $request)
     {
+        $limit = $request->input('limit',config('app.limit'));
 
         if ($this->response->typeIs('json')) {
-            $pageLimit = $request->input('pageLimit');
-            $data      = $this->repository
-                ->setPresenter(\Litepie\Roles\Repositories\Presenter\RoleListPresenter::class)
-                ->getDataTable($pageLimit);
+
+            $data = $this->repository
+                ->orderBy('id','asc')
+                ->setPresenter(\App\Repositories\Presenter\RoleListPresenter::class)
+                ->getDataTable($limit);
             return $this->response
-                ->data($data)
+                ->success()
+                ->count($data['recordsTotal'])
+                ->data($data['data'])
                 ->output();
         }
 
-        $roles = $this->repository->paginate();
-
-        return $this->response->title(trans('roles::role.names'))
-            ->view('roles::role.index', true)
-            ->data(compact('roles'))
+        return $this->response->title(trans('role.names'))
+            ->view('role.index', true)
             ->output();
     }
 
     /**
      * Display role.
      *
-     * @param Request $request
-     * @param Model   $role
+     * @param RoleRequest $request
+     * @param Role   $role
      *
      * @return Response
      */
     public function show(RoleRequest $request, Role $role)
     {
-
         if ($role->exists) {
-            $view = 'roles::role.show';
+            $view = 'role.show';
         } else {
-            $view = 'roles::role.new';
+            $view = 'role.new';
         }
-        $permissions     = $this->permission->groupedPermissions(true);
-        return $this->response->title(trans('app.view') . ' ' . trans('roles::role.name'))
+        $permissions = $this->permission->allPermissions();
+        return $this->response->title(trans('app.view') . ' ' . trans('role.name'))
             ->data(compact('role', 'permissions'))
             ->view($view, true)
             ->output();
@@ -85,16 +86,16 @@ class RoleResourceController extends BaseController
     /**
      * Show the form for creating a new role.
      *
-     * @param Request $request
+     * @param RoleRequest $request
      *
      * @return Response
      */
     public function create(RoleRequest $request)
     {
-        $permissions     = $this->permission->groupedPermissions(true);
+        $permissions = $this->permission->allPermissions();
         $role = $this->repository->newInstance([]);
-        return $this->response->title(trans('app.new') . ' ' . trans('roles::role.name'))
-            ->view('roles::role.create', true)
+        return $this->response->title(trans('app.new') . ' ' . trans('role.name'))
+            ->view('role.create', true)
             ->data(compact('role', 'permissions'))
             ->output();
     }
@@ -102,7 +103,7 @@ class RoleResourceController extends BaseController
     /**
      * Create new role.
      *
-     * @param Request $request
+     * @param RoleRequest $request
      *
      * @return Response
      */
@@ -113,17 +114,17 @@ class RoleResourceController extends BaseController
             $attributes['user_id']   = user_id();
             $attributes['user_type'] = user_type();
             $role                    = $this->repository->create($attributes);
-
-            return $this->response->message(trans('messages.success.created', ['Module' => trans('roles::role.name')]))
-                ->code(204)
+            $role->permissions()->sync($attributes['permissions']);
+            return $this->response->message(trans('messages.success.created', ['Module' => trans('role.name')]))
+                ->code(0)
                 ->status('success')
-                ->url(guard_url('roles/role/' . $role->getRouteKey()))
+                ->url(guard_url('role/' . $role->id))
                 ->redirect();
         } catch (Exception $e) {
             return $this->response->message($e->getMessage())
                 ->code(400)
                 ->status('error')
-                ->url(guard_url('/roles/role'))
+                ->url(guard_url('/role'))
                 ->redirect();
         }
 
@@ -132,8 +133,8 @@ class RoleResourceController extends BaseController
     /**
      * Show role for editing.
      *
-     * @param Request $request
-     * @param Model   $role
+     * @param RoleRequest $request
+     * @param Role   $role
      *
      * @return Response
      */
@@ -149,8 +150,8 @@ class RoleResourceController extends BaseController
     /**
      * Update the role.
      *
-     * @param Request $request
-     * @param Model   $role
+     * @param RoleRequest $request
+     * @param Role   $role
      *
      * @return Response
      */
@@ -162,16 +163,16 @@ class RoleResourceController extends BaseController
             $role->update($attributes);
             $role->permissions()->sync($permissions);
 
-            return $this->response->message(trans('messages.success.updated', ['Module' => trans('roles::role.name')]))
-                ->code(204)
+            return $this->response->message(trans('messages.success.updated', ['Module' => trans('role.name')]))
+                ->code(0)
                 ->status('success')
-                ->url(guard_url('roles/role/' . $role->getRouteKey()))
+                ->url(guard_url('role/' . $role->id))
                 ->redirect();
         } catch (Exception $e) {
             return $this->response->message($e->getMessage())
                 ->code(400)
                 ->status('error')
-                ->url(guard_url('roles/role/' . $role->getRouteKey()))
+                ->url(guard_url('role/' . $role->id))
                 ->redirect();
         }
 
@@ -180,19 +181,19 @@ class RoleResourceController extends BaseController
     /**
      * Remove the role.
      *
-     * @param Model   $role
+     * @param RoleRequest $request
+     * @param Role   $role
      *
      * @return Response
      */
     public function destroy(RoleRequest $request, Role $role)
     {
         try {
-
-            $role->delete();
-            return $this->response->message(trans('messages.success.deleted', ['Module' => trans('roles::role.name')]))
+            $role->forceDelete();
+            return $this->response->message(trans('messages.success.deleted', ['Module' => trans('role.name')]))
                 ->code(202)
                 ->status('success')
-                ->url(guard_url('roles/role/0'))
+                ->url(guard_url('role'))
                 ->redirect();
 
         } catch (Exception $e) {
@@ -200,11 +201,32 @@ class RoleResourceController extends BaseController
             return $this->response->message($e->getMessage())
                 ->code(400)
                 ->status('error')
-                ->url(guard_url('roles/role/' . $role->getRouteKey()))
+                ->url(guard_url('role'))
                 ->redirect();
         }
 
     }
+    public function destroyAll(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $ids = $data['ids'];
+            $this->repository->forceDelete($ids);
 
+            return $this->response->message(trans('messages.success.deleted', ['Module' => trans('role.name')]))
+                ->status("success")
+                ->code(202)
+                ->url(guard_url('role'))
+                ->redirect();
+
+        } catch (Exception $e) {
+
+            return $this->response->message($e->getMessage())
+                ->status("error")
+                ->code(400)
+                ->url(guard_url('role'))
+                ->redirect();
+        }
+    }
 
 }

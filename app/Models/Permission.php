@@ -27,4 +27,27 @@ class Permission extends BaseModel
 	    return $this->slug . '.' . $this->id;
 	}
 
+    public function getIconHtmlAttribute()
+    {
+        return $this->attributes['icon'] ? '<i class="layui-icon ' . $this->attributes['icon'] . '"></i>' : '';
+    }
+
+    public function getNameAttribute($value)
+    {
+        if(starts_with($value, '#')) {
+            return head(explode('-', $value));
+        }
+        return $value;
+    }
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = ($value == '#') ? '#-' . time() : $value;
+    }
+
+    public function getSubPermissionAttribute()
+    {
+        return ($this->attributes['parent_id'] == 0) ? $this->where('parent_id',$this->attributes['id'])->orderBy('order', 'asc')->get() : null;
+    }
+
 }

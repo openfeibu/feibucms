@@ -100,7 +100,7 @@ class LinkResourceController extends BaseController
     public function destroy(Request $request,Link $link)
     {
         try {
-            $this->repository->delete([$link->id]);
+            $this->repository->forceDelete([$link->id]);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('link.name')]))
                 ->status("success")
@@ -122,7 +122,7 @@ class LinkResourceController extends BaseController
         try {
             $data = $request->all();
             $ids = $data['ids'];
-            $this->repository->delete($ids);
+            $this->repository->forceDelete($ids);
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('link.name')]))
                 ->status("success")

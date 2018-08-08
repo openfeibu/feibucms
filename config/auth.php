@@ -45,7 +45,7 @@ return [
             ],
 
         ],
-
+        /*
         'client' => [
             'web' => [
                 'driver'   => 'session',
@@ -58,6 +58,7 @@ return [
             ],
 
         ],
+        */
     ],
 
     /*

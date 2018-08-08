@@ -13,7 +13,7 @@ class AdminUserRepository extends BaseRepository implements AdminUserRepositoryI
 
     public function boot()
     {
-        //$this->fieldSearchable = config('users.user.model.search');
+        $this->fieldSearchable = config('model.user.admin.model.search');
     }
 
     /**
