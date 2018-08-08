@@ -28,16 +28,15 @@ class Tree
         }
         return isset($data)?$data:array();
     }
-    public function getTree($data,$myid = 0,$new_arr = [],$number = 0){
-        $child = $this->getChild($data,$myid);
+    public function getTree($data, $repeat = '&nbsp;&nbsp;', $id = 0, $new_arr = [], $number = 0){
+        $child = $this->getChild($data,$id);
         if(is_array($child)){
-            $total = count($child);
             $number++;
             foreach($child as $id => $value){
-                $level_sign = $number > 0 ? str_repeat('----',$number-1) : '';
+                $level_sign = $number > 0 ? str_repeat($repeat,($number-1) * 4 ) : '';
                 $value['name'] = $level_sign.$value['name'];
                 $new_arr[] = $value;
-                $new_arr = $this->getTree($data,$value['id'],$new_arr,$number);
+                $new_arr = $this->getTree($data, $repeat, $value['id'], $new_arr,$number);
             }
         }
         return $new_arr;
@@ -47,13 +46,13 @@ class Tree
      * @param int
      * @return array
      */
-    public function getChild($data,$myid){
-        $a = $newarr = array();
+    public function getChild($data, $id){
+        $a = $new_arr = array();
         if(is_array($data)){
-            foreach($data as $id => $a){
-                if($a['parent_id'] == $myid) $newarr[$id] = $a;
+            foreach($data as $key => $a){
+                if($a['parent_id'] == $id) $new_arr[$key] = $a;
             }
         }
-        return $newarr ? $newarr : false;
+        return $new_arr ? $new_arr : false;
     }
 }
