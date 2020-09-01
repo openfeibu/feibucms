@@ -23,7 +23,7 @@ class Tree
         foreach($arr as $k => $v){
             if($v['parent_id'] == $parent_id){
                 $data[$v['id']]=$v;
-                $data[$v['id']] = $this->vTree($v,$v['id']);
+                $data[$v['id']]['child'] = $this->vTree($arr,$v['id']);
             }
         }
         return isset($data)?$data:array();
@@ -54,5 +54,30 @@ class Tree
             }
         }
         return $new_arr ? $new_arr : false;
+    }
+    public function getLevelTree($data,$parent_id=0)
+    {
+        $new_arr = [];
+        foreach ($data as $key => $item) {
+            if($item['parent_id'] == $parent_id)
+            {
+                $new_arr[$item['id']] = $item;
+                $new_arr[$item['id']]['children'] = $this->getLevelTree($data,$item['id']);
+            }
+        }
+        return $new_arr;
+    }
+    public function getSameLevelWithSignTree($data, $repeat='&nbsp;&nbsp;', $id=0, $new_arr=[], $number=0){
+        $child = $this->getChild($data,$id);
+        if(is_array($child)){
+            $number++;
+            foreach($child as $id => $item){
+                $level_sign = $number > 0 ? str_repeat($repeat,($number-1) * 4 ) : '';
+                $item['name'] = $level_sign.$item['name'];
+                $new_arr[] = $item;
+                $new_arr = $this->getSameLevelWithSignTree($data, $repeat, $item['id'], $new_arr,$number);
+            }
+        }
+        return $new_arr;
     }
 }

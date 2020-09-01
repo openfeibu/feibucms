@@ -23,8 +23,8 @@ class AdminUserRepository extends BaseRepository implements AdminUserRepositoryI
      */
     public function model()
     {
-        $provider = config("auth.guards." . getenv('guard') . ".provider", 'users');
-        return config("auth.providers.$provider.model", App\Model\AdminUser::class);
+        $provider = config("auth.guards." . getenv('guard') . ".provider", 'admins');
+        return config("auth.providers.$provider.model", \App\Models\AdminUser::class);
     }
 
     /**

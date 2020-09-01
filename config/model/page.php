@@ -48,7 +48,6 @@ return [
             ],
         ],
         'casts'        => [
-            'banner' => 'array',
             'images' => 'array',
         ],
         'encrypt'      => ['id'],

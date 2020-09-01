@@ -31,7 +31,7 @@ class RecruitResourceController extends BaseController
                 ->data($data['data'])
                 ->output();
         }
-        return $this->response->title(trans('app.admin.panel'))
+        return $this->response->title(setting('station_name'))
             ->view('recruit.index')
             ->output();
     }
@@ -39,7 +39,7 @@ class RecruitResourceController extends BaseController
     {
         $recruit = $this->repository->newInstance([]);
 
-        return $this->response->title(trans('app.admin.panel'))
+        return $this->response->title(setting('station_name'))
             ->view('recruit.create')
             ->data(compact('recruit'))
             ->output();

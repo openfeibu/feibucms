@@ -32,4 +32,13 @@ return [
         'success' => '成功',
         'error'   => '错误',
     ],
+    'submit' => [
+        'success' => '提交成功',
+        'error'   => '提交失败',
+    ],
+    'confirm_delete' => '确定删除？',
+    'confirm_delete_folder' => '确定删除文件夹及文件夹以下的文件？',
+    'folder_exists' => '文件夹已存在。',
+    'file_exists' => '文件已存在。',
+    'directory_must_be_empty_to_delete' => '请先删除该文件夹下的所有文件。',
 ];

@@ -23,8 +23,8 @@ class CaseCategoryResourceController extends BaseController
     {
         parent::__construct();
         $this->repository = $category;
-        $this->category_name = 'case';
-        $this->category = $this->repository->where(['slug' => $this->category_name])->first();
+        $this->category_slug = 'case';
+        $this->category = $this->repository->where(['slug' => $this->category_slug])->first();
         $this->repository
             ->pushCriteria(\App\Repositories\Criteria\RequestCriteria::class)
             ->pushCriteria(\App\Repositories\Criteria\PageCategoryResourceCriteria::class);
@@ -36,7 +36,7 @@ class CaseCategoryResourceController extends BaseController
         {
             $categories = $this->repository
                 ->where(['parent_id' => $this->category['id']])
-                ->orderBy('order','asc')
+                ->orderBy('order','desc')
                 ->orderBy('id','asc')
                 ->all()
                 ->toArray();

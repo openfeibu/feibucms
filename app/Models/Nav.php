@@ -22,8 +22,19 @@ class Nav extends BaseModel
 
     public $timestamps = false;
 
+    public $appends = ['category_name'];
+
     public function category()
     {
         return $this->belongsTo('App\Models\NavCategory', 'category_id');
+    }
+    public function getCategoryNameAttribute()
+    {
+        return isset($this->attributes['category_id']) && $this->attributes['category_id'] ? NavCategory::where('id',$this->attributes['category_id'])->value('name') : '';
+    }
+    public function setParentIdAttribute($value)
+    {
+        $this->attributes['parent_id']        = $value ?? 0;
+
     }
 }

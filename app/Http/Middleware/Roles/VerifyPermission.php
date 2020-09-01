@@ -35,10 +35,12 @@ class VerifyPermission
      */
     public function handle($request, Closure $next, $permission)
     {
-        if ($this->auth->check() && $this->auth->user()->checkPermission($permission)) {
+//        if ($this->auth->check() && $this->auth->user()->checkPermission($permission)) {
+//            return $next($request);
+//        }
+        if ($this->auth->check()) {
             return $next($request);
         }
-
         throw new PermissionDeniedException($permission);
     }
 }

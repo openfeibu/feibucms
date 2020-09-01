@@ -21,13 +21,13 @@ class SystemPageResourceController extends BaseController
         $this->repository = $page;
         $this->category_repository = $category_repository;
         $this->request = $request;
-        $this->category_name = 'system';
+        $this->category_slug = 'system';
         $this->main_url = 'system_page';
         if($category_name = $this->request->input('category_name',''))
         {
-            $this->category_name = $category_name;
+            $this->category_slug = $category_name;
         }
-        $category_data = $category_repository->where(['slug' => $this->category_name])->first();
+        $category_data = $category_repository->where(['slug' => $this->category_slug])->first();
         $this->category_data = $category_data;
         $this->category_id = $category_data['id'];
         $this->repository = $this->repository

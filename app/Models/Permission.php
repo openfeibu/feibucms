@@ -44,6 +44,10 @@ class Permission extends BaseModel
     {
         $this->attributes['name'] = ($value == '#') ? '#-' . time() : $value;
     }
+    public function setSlugAttribute($value)
+    {
+        $this->attributes['slug'] = $value ? $value : '#';
+    }
 
     public function getSubPermissionAttribute()
     {

@@ -41,6 +41,12 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">邮政编码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="zip_code" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" value="{{$company['zip_code']}}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">经纬度</label>
                         <div class="layui-input-inline">
                             <input type="text" name="longitude" lay-verify="longitude" autocomplete="off" placeholder="请输入经度" class="layui-input" value="{{$company['longitude']}}">

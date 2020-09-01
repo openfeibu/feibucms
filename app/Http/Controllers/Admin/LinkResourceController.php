@@ -31,7 +31,7 @@ class LinkResourceController extends BaseController
                 ->data($data['data'])
                 ->output();
         }
-        return $this->response->title(trans('app.admin.panel'))
+        return $this->response->title(setting('station_name'))
             ->view('link.index')
             ->output();
     }
@@ -39,7 +39,7 @@ class LinkResourceController extends BaseController
     {
         $link = $this->repository->newInstance([]);
 
-        return $this->response->title(trans('app.admin.panel'))
+        return $this->response->title(setting('station_name'))
             ->view('link.create')
             ->data(compact('link'))
             ->output();

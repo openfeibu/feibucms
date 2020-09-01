@@ -64,6 +64,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('filer', function ($app) {
             return new \App\Helpers\Filer\Filer();
         });
+        $this->app->bind('nav_repository',function($app){
+            return new \App\Repositories\Eloquent\NavRepository($app);
+        });
+
+        $this->app->bind('page_repository',function($app){
+            return new \App\Repositories\Eloquent\PageRepository($app);
+        });
+
         $this->app->singleton('image', function ($app) {
             return new ImageManager($app['config']->get('image'));
         });

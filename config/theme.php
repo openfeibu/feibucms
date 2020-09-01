@@ -14,21 +14,13 @@ return array(
 	|
 	*/
     'themes'        => [
-        'default' => [
-            'theme'  => 'public',
-            'view'   => 'public',
-        ],
         'admin'   => [
             'theme'  => 'admin',
             'view'   => 'admin',
         ],
-        'public'  => [
-            'theme'  => 'public',
-            'view'   => 'public',
-        ],
-        'user'    => [
-            'theme'  => 'user',
-            'view'   => 'user',
+        'pc'   => [
+            'theme'  => 'pc',
+            'view'   => 'pc',
         ],
         'client'    => [
             'theme'  => 'client',

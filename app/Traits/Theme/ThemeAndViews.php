@@ -28,7 +28,6 @@ trait ThemeAndViews
         if (empty($layout)) {
             $layout = $this->getLayout();
         }
-
         $this->response->theme($theme)
             ->layout($layout);
     }
@@ -64,7 +63,7 @@ trait ThemeAndViews
      */
     protected function getViewFolder()
     {
-        return substr($this->getGuard(), 0, strpos(getenv('guard'), '.'));
+        return getenv('theme') ?? substr($this->getGuard(), 0, strpos(getenv('guard'), '.'));
     }
 
 }

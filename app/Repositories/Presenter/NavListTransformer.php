@@ -12,7 +12,7 @@ class NavListTransformer extends TransformerAbstract
             'id'      => $nav->id,
             'url'     => $nav->url,
             'name'    => $nav->name,
-            'image'   => $nav->image ? url("/image/sm".$nav->image) : '',
+            'image'   => $nav->image ? url("/image/original".$nav->image) : '',
             'order'   => $nav->order,
             'category_name' => $nav->category->name,
         ];

@@ -20,4 +20,9 @@ class Controller extends BaseController
      */
     public $repository;
 
+    public function __construct()
+    {
+        set_route_guard('web','admin','admin');
+    }
+
 }

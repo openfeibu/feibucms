@@ -2,7 +2,7 @@
 <table class="table  table-condensed">
     <tr>
         <th>{{ Lang::get('page::page.name') }}</th>
-        <th>{{ Lang::get('page::page.label.title') }}</th>
+        <th>{{ Lang::get('page::app.title') }}</th>
         <th>{{ Lang::get('page::page.label.slug') }}</th>
         <th width="70">{{ Lang::get('app.options') }}</th>
     </tr>

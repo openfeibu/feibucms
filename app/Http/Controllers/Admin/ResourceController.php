@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Route;
+use App\Models\Page;
+use Route,Auth;
 use App\Http\Controllers\Admin\Controller as BaseController;
 use App\Traits\AdminUser\AdminUserPages;
 use App\Http\Response\ResourceResponse;
@@ -15,10 +16,11 @@ class ResourceController extends BaseController
 
     public function __construct()
     {
+        parent::__construct();
         if (!empty(app('auth')->getDefaultDriver())) {
             $this->middleware('auth:' . app('auth')->getDefaultDriver());
-           // $this->middleware('role:' . $this->getGuardRoute());
-            $this->middleware('permission:' .Route::currentRouteName());
+            // $this->middleware('role:' . $this->getGuardRoute());
+            $this->middleware('permission:' .request()->route()->getName());
             $this->middleware('active');
         }
         $this->response = app(ResourceResponse::class);
@@ -31,7 +33,7 @@ class ResourceController extends BaseController
      */
     public function home()
     {
-        return $this->response->title(trans('app.admin.panel'))
+        return $this->response->title(trans('app.home'))
             ->view('home')
             ->output();
     }

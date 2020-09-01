@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\ResourceController as BaseController;
 use Illuminate\Http\Request;
 use App\Models\Nav;
-use App\Repositories\Eloquent\NavRepositoryInterface;
-use App\Repositories\Eloquent\NavCategoryRepositoryInterface;
-
+use App\Repositories\Eloquent\NavRepository;
+use App\Repositories\Eloquent\NavCategoryRepository;
+use Tree;
 /**
  * Resource controller class for page.
  */
@@ -17,11 +17,11 @@ class NavResourceController extends BaseController
     /**
      * Initialize page resource controller.
      *
-     * @param type NavRepositoryInterface $nav
-     *
+     * @param type NavRepository $nav
+     * @param type NavCategoryRepository $category_repository
      */
-    public function __construct(NavRepositoryInterface $nav,
-                                NavCategoryRepositoryInterface $category_repository)
+    public function __construct(NavRepository $nav,
+                                NavCategoryRepository $category_repository)
     {
         parent::__construct();
         $this->repository = $nav;
@@ -39,22 +39,17 @@ class NavResourceController extends BaseController
      */
     public function index(Request $request)
     {
-        $limit = $request->input('limit',config('app.limit'));
-        $data = $this->repository
-            ->setPresenter(\App\Repositories\Presenter\NavListPresenter::class)
-            ->getDataTable($limit);
-
         if ($this->response->typeIs('json')) {
+            $data = $this->repository->allNavs()->toArray();
+            $data = Tree::getSameLevelWithSignTree($data);
             return $this->response
                 ->success()
-                ->count($data['recordsTotal'])
-                ->data($data['data'])
+                ->data($data)
                 ->output();
         }
-        $pages = $this->repository->paginate();
+
         return $this->response->title(trans('nav.names'))
             ->view('nav.index', true)
-            ->data(compact('pages','data'))
             ->output();
     }
 
@@ -114,7 +109,7 @@ class NavResourceController extends BaseController
             return $this->response->message(trans('messages.success.created', ['Module' => trans('nav.name')]))
                 ->code(204)
                 ->status('success')
-                ->url(guard_url('nav/nav/' . $nav->id))
+                ->url(guard_url('nav/nav'))
                 ->redirect();
         } catch (Exception $e) {
             return $this->response->message($e->getMessage())
@@ -159,7 +154,7 @@ class NavResourceController extends BaseController
             return $this->response->message(trans('messages.success.updated', ['Module' => trans('nav.name')]))
                 ->code(204)
                 ->status('success')
-                ->url(guard_url('nav/nav/' . $nav->id))
+                ->url(guard_url('nav/nav'))
                 ->redirect();
         } catch (Exception $e) {
             return $this->response->message($e->getMessage())
@@ -220,5 +215,10 @@ class NavResourceController extends BaseController
                 ->url(guard_url('nav/nav'))
                 ->redirect();
         }
+    }
+    public function navTree(Request $request)
+    {
+        $navs = $this->repository->getAllNavSelectTree();
+        return $navs;
     }
 }

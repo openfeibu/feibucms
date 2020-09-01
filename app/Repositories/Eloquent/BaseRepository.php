@@ -242,14 +242,29 @@ abstract class BaseRepository extends PrettusRepository implements RepositoryInt
         $this->applyScope();
         return $this->model->toSql();
     }
-    public function where(array $where)
+    public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
-        $this->applyConditions($where);
+        $this->model = $this->model->where($column, $operator,$value,$boolean = 'and');
         return $this;
     }
     public function whereIn($field,$values)
     {
         $this->model = $this->model->whereIn($field, $values);
+        return $this;
+    }
+    public function limit($count=10)
+    {
+        $this->model = $this->model->limit($count);
+        return $this;
+    }
+    public function join($table, $first, $operator = null, $second = null, $type = 'inner', $where = false)
+    {
+        $this->model = $this->model->join($table, $first, $operator, $second, $type, $where = false);
+        return $this;
+    }
+    public function leftJoin($table, $first, $operator = null, $second = null, $type = 'inner', $where = false)
+    {
+        $this->model = $this->model->leftJoin($table, $first, $operator, $second, $type, $where = false);
         return $this;
     }
 }

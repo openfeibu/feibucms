@@ -76,8 +76,11 @@ trait Filer
                 }
 
             }
+            if($files)
+            {
+                $this->setFiles($field, $files);
+            }
 
-            $this->setFiles($field, $files);
         }
 
     }
@@ -126,7 +129,7 @@ trait Filer
      */
     public function getCropURL($field, $file = 'file')
     {
-        return trans_url('crop/' . $this->config . '/' . ($this->upload_folder) . '/' . $field . '/' . $file);
+        return guard_url('crop/' . $this->config . '/' . ($this->upload_folder) . '/' . $field . '/' . $file);
     }
 
     /**
@@ -139,7 +142,7 @@ trait Filer
      */
     public function getFileURL($field, $file = 'file')
     {
-        return trans_url('file/' . $this->config . '/' . ($this->upload_folder) . '/' . $field . '/' . $file);
+        return guard_url('file/' . $this->config . '/' . ($this->upload_folder) . '/' . $field . '/' . $file);
     }
 
     /**
@@ -252,43 +255,52 @@ trait Filer
      * Return the main image for the record.
      *
      * @param type|string $field
+     * @param type|bool $multiple
      * @param type|bool $download
      *
      * @return array path
      */
-    public function getFile($field, $download = false)
+    public function getFile($field, $multiple = false,$download = false)
     {
         $files = $this->$field;
 
-        $prefix = ($download) ? 'original' : 'download';
+        $prefix = ($download) ? 'image/download' : 'image/original';
 
         if (empty($files)) {
             return [];
         }
-        if(!is_array($files)){
+        if($multiple && !is_array($files) && !is_object($files))
+        {
+            $files = explode(',',$files);
+        }
+
+        if(!is_array($files) && !is_object($files)){
             return [
-                'url' => url("{$prefix}/" . $files),
+                'url' => strpos($files, 'http') === false ? url("{$prefix}" . $files) : $files,
                 'path' => $files,
             ];
         }
 
+        $data = [];
+
         foreach ($files as $key => $file) {
-            $files[$key]['url'] = url("{$prefix}/" . $file['path']);
+            $data[$key]['url'] =strpos($file, 'http') === false ? url("{$prefix}" . $file) : $file;
+            $data[$key]['path'] = $file;
         }
 
-        return $files;
+        return $data;
     }
 
     /**
      * Display files inside a form.
      *
      * @param type|string $field
-     *
+     * @param type|bool $multiple
      * @return string path
      */
-    public function files($field)
+    public function files($field,$multiple=false)
     {
-        $form = new Forms($field, $this->config, $this->getFile($field));
+        $form = new Forms($field, $this->config, $this->getFile($field,$multiple));
         return $form;
     }
 

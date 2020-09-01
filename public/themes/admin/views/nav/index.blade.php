@@ -44,16 +44,17 @@
             ,cols: [[
                 {checkbox: true, fixed: true}
                 ,{field:'id',title:'ID', width:80, sort: true}
-                ,{field:'name',title:'名称', width:200}
-                ,{field:'image',title:'图标', toolbar:'#imageTEM',}
-                ,{field:'url',title:'链接', width:100}
-                ,{field:'category_name',title:'分类', width:200}
-                ,{field:'order',title:'排序', width:100}
-                ,{field:'score',title:'操作', width:200, align: 'right',toolbar:'#barDemo'}
+                ,{field:'name',title:'{{ trans('nav.label.name') }}',edit:'text'}
+                ,{field:'slug',title:'{{ trans('nav.label.slug') }}',edit:'text'}
+                ,{field:'image',title:'{{ trans('nav.label.image') }}', toolbar:'#imageTEM',width:120}
+                ,{field:'url',title:'{{ trans('nav.label.url') }}',edit:'text'}
+                ,{field:'order',title:'{{ trans('app.order') }}', width:100,edit:'text'}
+                ,{field:'score',title:'{{ trans('app.actions') }}', width:200, align: 'right',fixed: 'right',toolbar:'#barDemo'}
             ]]
             ,id: 'fb-table'
             ,page: true
             ,limit: 10
+            ,cellMinWidth:200
             ,height: 'full-200'
         });
 

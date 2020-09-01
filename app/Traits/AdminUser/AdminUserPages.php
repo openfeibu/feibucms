@@ -2,12 +2,9 @@
 
 namespace App\Traits\AdminUser;
 
-use Auth;
-use Form;
-use Hash;
+use Auth,Validator,Form,Hash,Response;
 use Illuminate\Http\Request;
 use App\Traits\AdminUser\Auth\Common;
-use Response;
 /**
  * Trait for managing user profile.
  */
@@ -37,7 +34,7 @@ trait AdminUserPages
      */
     public function getPassword(Request $request, $role = null)
     {
-        return $this->response->title('Change Password')
+        return $this->response->title('修改密码')
             ->view('user.password')
             ->output();
     }
@@ -68,13 +65,29 @@ trait AdminUserPages
     {
         $user = $request->user($this->getGuard());
 
-        $this->validate($request, [
-            'password'     => 'required|confirmed|min:6',
+        $validator = Validator::make($request->all(), [
             'old_password' => 'required',
+            'password'     => 'required|confirmed|min:6',
+        ],[
+            'old_password.required' => '旧密码不能为空',
+            'password.required' => '新密码不能为空',
+            'password.confirmed' => '重复新密码不正确',
+            'password.min' => '密码最少六位',
         ]);
+        if ($validator->fails()) {
+            return $this->response->message($validator->errors()->first())
+                ->code(400)
+                ->status('error')
+                ->url(guard_url('password'))
+                ->redirect();
+        }
 
         if (!Hash::check($request->get('old_password'), $user->password)) {
-            return redirect()->back()->withMessage('Invalid old password')->withCode(400);
+            return $this->response->message('旧密码错误')
+                ->code(400)
+                ->status('error')
+                ->url(guard_url('password'))
+                ->redirect();
         }
 
         $password = $request->get('password');
@@ -82,9 +95,20 @@ trait AdminUserPages
         $user->password = bcrypt($password);
 
         if ($user->save()) {
-            return redirect()->back()->withMessage('Password updated successfully.')->withCode(201);
+            return $this->response->message('修改成功')
+                ->code(0)
+                ->status('success')
+                ->url(guard_url('password'))
+                ->redirect();
         } else {
+            return $this->response->message('出错了')
+                ->code(400)
+                ->status('error')
+                ->url(guard_url('password'))
+                ->redirect();
+            /*
             return redirect()->back()->withMessage('Error while resetting password.')->withCode(400);
+            */
         }
 
     }

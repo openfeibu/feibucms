@@ -15,7 +15,7 @@
                 <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
             </th>
             <th>{!! trans('page.label.name')!!}</th>
-            <th>{!! trans('page.label.title')!!}</th>
+            <th>{!! trans('app.title')!!}</th>
             <th>{!! trans('page.label.url')!!}</th>
             <th>{!! trans('page.label.heading')!!}</th>
             <th>{!! trans('page.label.order')!!}</th>

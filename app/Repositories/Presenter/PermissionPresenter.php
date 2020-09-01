@@ -4,7 +4,7 @@ namespace App\Repositories\Presenter;
 
 use Route,Auth;
 use App\Repositories\Presenter\FractalPresenter;
-use App\Repositories\Eloquent\PermissionRepositoryInterface;
+use App\Repositories\Eloquent\PermissionRepository;
 
 /**
  * Class PermissionPresenter
@@ -15,7 +15,7 @@ class PermissionPresenter extends FractalPresenter
 {
     protected $permission;
 
-    public function __construct(PermissionRepositoryInterface $permission)
+    public function __construct(PermissionRepository $permission)
     {
 
         $this->permission = $permission;
@@ -34,12 +34,15 @@ class PermissionPresenter extends FractalPresenter
     {
 
         $menus = $this->permission->menus();
-
         $html = '';
         if($menus) {
 
             foreach ($menus as $menu) {
 
+                if(!$menu->is_menu)
+                {
+                    continue;
+                }
                 if(($menu->slug !== '#') && !Route::has($menu->slug)) {
                     continue;
                 }
@@ -51,7 +54,7 @@ class PermissionPresenter extends FractalPresenter
                 }
 
                 $html .= '<li class="layui-nav-item '.$class.'">';
-                $href = ($menu->slug == '#') || isset($menu->sub)  ? 'javascript:;' : route($menu->slug);
+                $href = ($menu->slug == '#') || (!Route::has($menu->slug)) ? 'javascript:;' : route($menu->slug);
                 $html .= sprintf('<a href="%s">%s %s</a>', $href, $menu->icon_html, $menu->name);
 
                 if(!isset($menu->sub)) {
@@ -59,11 +62,20 @@ class PermissionPresenter extends FractalPresenter
                     continue;
                 }
 
-                $html .= '<dl class="layui-nav-child">';
+                $i = 0;
 
                 foreach ($menu->sub as $sub) {
+                    if(!$sub->is_menu)
+                    {
+                        continue;
+                    }
+
                     if(($sub->slug !== '#') && !Route::has($sub->slug)) {
                         continue;
+                    }
+                    if($i == 0)
+                    {
+                        $html .= '<dl class="layui-nav-child">';
                     }
                     $href = ($sub->slug == '#') ? '#' : route($sub->slug);
                     $icon = $sub->icon_html ? $sub->icon_html : '';
@@ -71,9 +83,13 @@ class PermissionPresenter extends FractalPresenter
                     $class = $sub->active ? 'layui-this' : '' ;
 
                     $html .= sprintf('<dd class="'.$class.'"><a href="%s">%s %s</a></dd>', $href, $icon, $sub->name);
-
+                    $i++;
                 }
-                $html .= '</dl>';
+                if($i)
+                {
+                    $html .= '</dl>';
+                }
+
 
                 $html .= '</li>';
             }

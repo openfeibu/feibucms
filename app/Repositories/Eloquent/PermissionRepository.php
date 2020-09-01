@@ -66,7 +66,7 @@ class PermissionRepository extends BaseRepository implements PermissionRepositor
         }
 
         // Do we have a display_name set?
-        $slug = is_null($slug) ? $name : $slug;
+        $slug = is_null($slug) ? '#' : $slug;
 
         return $permission = $this->model->create([
             'name' => $name,
@@ -114,26 +114,32 @@ class PermissionRepository extends BaseRepository implements PermissionRepositor
 
         if($father) {
             foreach ($father as $item) {
-                $active = ($item->slug == Route::currentRouteName()) ? true : false;
-                $sub = Auth::user()->menus($item->id);
+                $item->active = ($item->slug == request()->route()->getName()) ? true : false;
+                $item = $this->sub($item);
 
-                if(!$sub->isEmpty())
-                {
-                    foreach ($sub as $key => $sub_item)
-                    {
-                        $sub_item->active = $sub_item->slug == Route::currentRouteName() ? true : false;
-                        $active ? true : $active  = $sub_item->active;
-                    }
-                    $item->sub = $sub;
-                }
-
-                $item->active = $active;
                 $menus[] = $item;
             }
         }
 
         return $menus;
     }
+    public function sub($item)
+    {
+        $sub = Auth::user()->menus($item->id);
+        if(!$sub->isEmpty())
+        {
+            foreach ($sub as $key => $sub_item)
+            {
+                var_dump($sub_item->slug,request()->route()->getName(),Route::currentRouteAction());
+                $sub_item->active = $sub_item->slug == request()->route()->getName() ? true : false;
+                $sub_item->sub = $this->sub($sub_item);
+                $item->active ? true : $item->active  = $sub_item->active;
+            }
+            $item->sub = $sub;
+        }
+        return $item;
+    }
+
     public function permissions($parent_id = 0)
     {
         return $this->model->where('parent_id', $parent_id)->orderBy('order', 'asc')->orderBy('id', 'asc')->get();
@@ -150,5 +156,24 @@ class PermissionRepository extends BaseRepository implements PermissionRepositor
             $permissions[$item->id] = $item;
         }
         return $permissions;
+    }
+    public function permissionList($id,$list=[])
+    {
+        $permission = $this->model->where('id',$id)->first();
+        if(!$permission)
+        {
+            return $list;
+        }
+        array_unshift($list,$permission);
+        if($permission->parent_id)
+        {
+            return $this->permissionList($permission->parent_id,$list);
+        }
+        return $list;
+    }
+    public function permissionParent($parent_id)
+    {
+        $parent = $this->model->where('id',$parent_id)->first();
+        return $parent ? $parent->toArray() : [];
     }
 }

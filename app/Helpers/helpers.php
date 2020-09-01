@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Request;
 use App\Facades\Hashids;
 use App\Facades\Trans;
+use Illuminate\Support\Facades\Route;
 
 if (!function_exists('hashids_encode')) {
     /**
@@ -282,10 +283,10 @@ if (!function_exists('set_route_guard')) {
      *
      * @return string
      */
-    function set_route_guard($sub = 'web', $guard=null)
+    function set_route_guard($sub = 'web', $guard=null,$theme=null)
     {
         $i = ($sub == 'web') ? 1 : 2;
-
+        $theme ? set_theme($theme) : '';
         //check whether guard is the first parameter of the route
         $guard = is_null($guard) ? request()->segment($i) : $guard;
         if (!empty(config("auth.guards.$guard"))){
@@ -307,6 +308,16 @@ if (!function_exists('set_route_guard')) {
         return $sub;
     }
 
+}
+if(!function_exists('set_theme'))
+{
+    function set_theme($theme = '')
+    {
+        if(!empty($theme))
+        {
+            putenv("theme={$theme}");
+        }
+    }
 }
 
 
@@ -410,6 +421,19 @@ if (!function_exists('format_time')) {
     }
 
 }
+if (!function_exists('theme_asset')) {
+    /**
+     * Get translated url.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    function theme_asset($file)
+    {
+        return app('theme')->asset()->url($file);
+    }
+}
 if (!function_exists('replace_image_url')) {
     function replace_image_url($content,$url)
     {
@@ -445,44 +469,427 @@ if (!function_exists('replace_image_url')) {
         }
     }
 }
-function get_substr($str,$len= 12, $dot= true) {
-    $i= 0;
-    $l= 0;
-    $c= 0;
-    $a= array();
-    while($l< $len) {
-        $t= substr($str,$i, 1);
-        if(ord($t) >= 224) {
-            $c= 3;
-            $t= substr($str,$i,$c);
-            $l+= 2;
-        }elseif(ord($t) >= 192) {
-            $c= 2;
-            $t= substr($str,$i,$c);
-            $l+= 2;
-        }else{
-            $c= 1;
-            $l++;
-        }
-        $i+= $c;
-        if($l> $len)break;
-        $a[] = $t;
-    }
-    $re= implode('',$a);
-    if(substr($str,$i, 1) !== false) {
-        array_pop($a);
-        ($c== 1) and array_pop($a);
-        $re= implode('',$a);
-        $dot and $re .= '...';
-    }
-    return $re;
-}
-function handle_image_url($image_url = '',$host = '')
-{
-    $host = $host ? $host : config('app.image_url') . '/';
-    if(!empty($image_url) && strpos($image_url,'http') === false)
+if (!function_exists('get_substr')) {
+    function get_substr($str, $len = 12, $dot = true)
     {
-        $image_url = $host.$image_url;
+        $i = 0;
+        $l = 0;
+        $c = 0;
+        $a = array();
+        while ($l < $len) {
+            $t = substr($str, $i, 1);
+            if (ord($t) >= 224) {
+                $c = 3;
+                $t = substr($str, $i, $c);
+                $l += 2;
+            } elseif (ord($t) >= 192) {
+                $c = 2;
+                $t = substr($str, $i, $c);
+                $l += 2;
+            } else {
+                $c = 1;
+                $l++;
+            }
+            $i += $c;
+            if ($l > $len) break;
+            $a[] = $t;
+        }
+        $re = implode('', $a);
+        if (substr($str, $i, 1) !== false) {
+            array_pop($a);
+            ($c == 1) and array_pop($a);
+            $re = implode('', $a);
+            $dot and $re .= '...';
+        }
+        return $re;
     }
-    return $image_url;
+}
+/*截取 不带html*/
+if (!function_exists('truncate')) {
+    function truncate($string, $length = 12, $append = true)
+    {
+
+        $string = trim(preg_replace("/(\s|\&nbsp\;|　|\xc2\xa0)/", " ", strip_tags($string)));
+        $strlength = strlen($string);
+        if ($length == 0 || $length >= $strlength) {
+            return $string;
+        } elseif ($length < 0) {
+            $length = $strlength + $length;
+            if ($length < 0) {
+                $length = $strlength;
+            }
+        }
+        if (function_exists('mb_substr')) {
+            $newstr = mb_substr($string, 0, $length, "UTF-8");
+        } elseif (function_exists('iconv_substr')) {
+            $newstr = iconv_substr($string, 0, $length, "UTF-8");
+        } else {
+            for ($i = 0; $i < $length; $i++) {
+                $tempstring = substr($string, 0, 1);
+                if (ord($tempstring) > 127) {
+                    $i++;
+                    if ($i < $length) {
+                        $newstring[] = substr($string, 0, 3);
+                        $string = substr($string, 3);
+                    }
+                } else {
+                    $newstring[] = substr($string, 0, 1);
+                    $string = substr($string, 1);
+                }
+            }
+            $newstr = join($newstring);
+        }
+        if ($append && $string != $newstr) {
+            $newstr .= '...';
+        }
+        return $newstr;
+    }
+}
+if (!function_exists('handle_image_url')) {
+    function handle_image_url($image_url = '', $host = '')
+    {
+        $host = $host ? $host : config('app.image_url') . '/';
+        if (!empty($image_url) && strpos($image_url, 'http') === false) {
+            $image_url = $host . $image_url;
+        }
+        return $image_url;
+    }
+}
+
+if (!function_exists('first_image')) {
+    function first_image($content)
+    {
+        $data['content'] = $content;
+        $soContent = $data['content'];
+        $soImages = '~<img [^>]* />~';
+        preg_match_all($soImages, $soContent, $thePics);
+        $allPics = count($thePics[0]);
+        preg_match('/<img.+src=\"?(.+\.(jpg|gif|bmp|bnp|PNG))\"?.+>/i', $thePics[0][0], $match);
+        $data['ig'] = $thePics[0][0];
+        if ($allPics > 0) {
+            return $match[1];
+        } else {
+            return null;
+        }
+    }
+}
+if (!function_exists('list_image_url_absolute')) {
+    function list_image_url_absolute($list, $size = 'sm')
+    {
+        foreach ($list as $key => $data) {
+            $list[$key]['image'] = image_url_absolute($data['image'], $size);
+        }
+        return $list;
+    }
+}
+if (!function_exists('image_url_absolute')) {
+    function image_url_absolute($image, $size = 'sm')
+    {
+        return $image ? url("/image/" . $size . $image) : '';
+    }
+}
+if (!function_exists('handle_images')) {
+    function handle_images($images, $host = '')
+    {
+        foreach ($images as $key => $image) {
+            $images[$key] = handle_image_url($image, $host);
+        }
+        return $images;
+    }
+}
+if (!function_exists('setting')) {
+    function setting($slug, $value = 'value')
+    {
+        return \App\Models\Setting::where('slug', $slug)->value($value);
+    }
+}
+if (!function_exists('logo')) {
+    function logo()
+    {
+        $logo =  \App\Models\Setting::where('slug', 'logo')->value('value');
+        return url('/image/original/'.$logo);
+    }
+}
+if (!function_exists('page')) {
+    function page($slug, $value = 'content')
+    {
+        return \App\Models\Page::where('slug', $slug)->value($value);
+    }
+}
+if (!function_exists('date_html')) {
+    function date_html($date)
+    {
+        $month = date('M',strtotime($date));
+        $day = date('d',strtotime($date));
+        $html = '<div class="date"><p>'.$day.'</p><span>'.$month.'</span></div>';
+        return $html;
+    }
+}
+/*
+* ============================== 截取含有 html标签的字符串 =========================
+* @param (string) $str   待截取字符串
+* @param (int)  $lenth  截取长度
+* @param (string) $repalce 超出的内容用$repalce替换之（该参数可以为带有html标签的字符串）
+* @param (string) $anchor 截取锚点，如果截取过程中遇到这个标记锚点就截至该锚点处
+* @return (string) $result 返回值
+* @demo  $res = cut_html_str($str, 256, '...'); //截取256个长度，其余部分用'...'替换
+* ===============================================================================
+*/
+if (!function_exists('cut_html_str')) {
+    function cut_html_str($str, $lenth, $replace = '......', $anchor = '<!-- break -->')
+    {
+        $_lenth = mb_strlen($str, "utf-8"); // 统计字符串长度（中、英文都算一个字符）
+        if ($_lenth <= $lenth) {
+            return $str;    // 传入的字符串长度小于截取长度，原样返回
+        }
+        $strlen_var = strlen($str);     // 统计字符串长度（UTF8编码下-中文算3个字符，英文算一个字符）
+        if (strpos($str, '<') === false) {
+            return mb_substr($str, 0, $lenth);  // 不包含 html 标签 ，直接截取
+        }
+        if ($e = strpos($str, $anchor)) {
+            return mb_substr($str, 0, $e);  // 包含截断标志，优先
+        }
+        $html_tag = 0;  // html 代码标记
+        $result = '';   // 摘要字符串
+        $html_array = array('left' => array(), 'right' => array()); //记录截取后字符串内出现的 html 标签，开始=>left,结束=>right
+        /*
+        * 如字符串为：<h3><p><b>a</b></h3>，假设p未闭合，数组则为：array('left'=>array('h3','p','b'), 'right'=>'b','h3');
+        * 仅补全 html 标签，<? <% 等其它语言标记，会产生不可预知结果
+        */
+        for ($i = 0; $i < $strlen_var; ++$i) {
+            if (!$lenth) break;  // 遍历完之后跳出
+            $current_var = substr($str, $i, 1); // 当前字符
+            if ($current_var == '<') { // html 代码开始
+                $html_tag = 1;
+                $html_array_str = '';
+            } else if ($html_tag == 1) { // 一段 html 代码结束
+                if ($current_var == '>') {
+                    $html_array_str = trim($html_array_str); //去除首尾空格，如 <br / > < img src="" / > 等可能出现首尾空格
+                    if (substr($html_array_str, -1) != '/') { //判断最后一个字符是否为 /，若是，则标签已闭合，不记录
+                        // 判断第一个字符是否 /，若是，则放在 right 单元
+                        $f = substr($html_array_str, 0, 1);
+                        if ($f == '/') {
+                            $html_array['right'][] = str_replace('/', '', $html_array_str); // 去掉 '/'
+                        } else if ($f != '?') { // 若是?，则为 PHP 代码，跳过
+                            // 若有半角空格，以空格分割，第一个单元为 html 标签。如：<h2 class="a"> <p class="a">
+                            if (strpos($html_array_str, ' ') !== false) {
+                                // 分割成2个单元，可能有多个空格，如：<h2 class="" id="">
+                                $html_array['left'][] = strtolower(current(explode(' ', $html_array_str, 2)));
+                            } else {
+                                //若没有空格，整个字符串为 html 标签，如：<b> <p> 等，统一转换为小写
+                                $html_array['left'][] = strtolower($html_array_str);
+                            }
+                        }
+                    }
+                    $html_array_str = ''; // 字符串重置
+                    $html_tag = 0;
+                } else {
+                    $html_array_str .= $current_var; //将< >之间的字符组成一个字符串,用于提取 html 标签
+                }
+            } else {
+                --$lenth; // 非 html 代码才记数
+            }
+            $ord_var_c = ord($str{$i});
+            switch (true) {
+                case (($ord_var_c & 0xE0) == 0xC0): // 2 字节
+                    $result .= substr($str, $i, 2);
+                    $i += 1;
+                    break;
+                case (($ord_var_c & 0xF0) == 0xE0): // 3 字节
+                    $result .= substr($str, $i, 3);
+                    $i += 2;
+                    break;
+                case (($ord_var_c & 0xF8) == 0xF0): // 4 字节
+                    $result .= substr($str, $i, 4);
+                    $i += 3;
+                    break;
+                case (($ord_var_c & 0xFC) == 0xF8): // 5 字节
+                    $result .= substr($str, $i, 5);
+                    $i += 4;
+                    break;
+                case (($ord_var_c & 0xFE) == 0xFC): // 6 字节
+                    $result .= substr($str, $i, 6);
+                    $i += 5;
+                    break;
+                default: // 1 字节
+                    $result .= $current_var;
+            }
+        }
+        if ($html_array['left']) { //比对左右 html 标签，不足则补全
+            $html_array['left'] = array_reverse($html_array['left']); //翻转left数组，补充的顺序应与 html 出现的顺序相反
+            foreach ($html_array['left'] as $index => $tag) {
+                $key = array_search($tag, $html_array['right']); // 判断该标签是否出现在 right 中
+                if ($key !== false) { // 出现，从 right 中删除该单元
+                    unset($html_array['right'][$key]);
+                } else { // 没有出现，需要补全
+                    $result .= '</' . $tag . '>';
+                }
+            }
+        }
+        return $result . $replace;
+    }
+}
+if (!function_exists('drop_blank')) {
+    function drop_blank($str)
+    {
+        $str = preg_replace("/\t/", "", $str); //使用正则表达式替换内容，如：空格，换行，并将替换为空。
+        $str = preg_replace("/\r\n/", "", $str);
+        $str = preg_replace("/\r/", "", $str);
+        $str = preg_replace("/\n/", "", $str);
+        $str = preg_replace("/ /", "", $str);
+        $str = preg_replace("/  /", "", $str);  //匹配html中的空格
+        return trim($str); //返回字符串
+    }
+}
+if (!function_exists('build_order_sn')) {
+    function build_order_sn()
+    {
+        return date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+    }
+}
+if (!function_exists('isVaildImage')) {
+    function isVaildImage($files)
+    {
+        $error = '';
+
+        foreach($files as $key => $file)
+        {
+            $name = $file->getClientOriginalName();
+            if(!$file->isValid())
+            {
+                $error.= $name.$file->getErrorMessage().';';
+            }
+            if(!in_array( strtolower($file->extension()),config('common.img_type'))){
+                $error.= $name."类型错误;";
+            }
+            if($file->getClientSize() > config('common.img_size')){
+                $img_size = config('common.img_size')/(1024*1024);
+                $error.= $name.'超过'.$img_size.'M';
+            }
+        }
+        if($error)
+        {
+            throw new \App\Exceptions\OutputServerMessageException($error);
+        }
+    }
+}
+if (!function_exists('isVaildFile')) {
+    function isVaildFile($files)
+    {
+        $error = '';
+
+        foreach($files as $key => $file)
+        {
+            $name = $file->getClientOriginalName();
+            if(!$file->isValid())
+            {
+                $error.= $name.$file->getErrorMessage().';';
+            }
+            if(!in_array( strtolower($file->extension()),config('common.file_type'))){
+                $error.= $name."类型错误;";
+            }
+            if($file->getClientSize() > config('common.file_size')){
+                $file_size = config('common.file_size')/(1024*1024);
+                $error.= $name.'超过'.$file_size.'M';
+            }
+        }
+        if($error)
+        {
+            throw new \App\Exceptions\OutputServerMessageException($error);
+        }
+    }
+}
+
+if (!function_exists('isVaildExcel')) {
+    function isVaildExcel($file)
+    {
+        $error = '';
+        $name = $file->getClientOriginalName();
+        if(!$file->isValid())
+        {
+            $error.= $name.$file->getErrorMessage().';';
+        }
+//        if(!in_array( strtolower($file->extension()),config('common.excel_type'))){
+//            $error.= $name."为".strtolower($file->extension())."格式，非Excel格式;";
+//        }
+        if($file->getClientSize() > config('common.file_size')){
+            $file_size = config('common.file_size')/(1024*1024);
+            $error.= $name.'超过'.$file_size.'M';
+        }
+
+        if($error)
+        {
+            throw new \App\Exceptions\OutputServerMessageException($error);
+        }
+    }
+}
+if (!function_exists('image_png_size_add')) {
+    function image_png_size_add($imgsrc, $imgdst,$max_width=1000,$size=0.9)
+    {
+        list($width, $height, $type) = getimagesize($imgsrc);
+        $ratio = $width > $max_width ? $max_width / $width : 1;
+        $new_width = $ratio * $width * $size;
+        $new_height = $ratio * $height * $size;
+
+        switch ($type) {
+            case 1:
+                $giftype = check_gifcartoon($imgsrc);
+                if ($giftype) {
+                    $image_wp = imagecreatetruecolor($new_width, $new_height);
+                    $image = imagecreatefromgif($imgsrc);
+                    imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                    imagegif($image_wp, $imgdst, 75);
+                    imagedestroy($image_wp);
+                }
+                break;
+            case 2:
+                $image_wp = imagecreatetruecolor($new_width, $new_height);
+                $image = imagecreatefromjpeg($imgsrc);
+                imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                imagejpeg($image_wp, $imgdst, 75);
+                imagedestroy($image_wp);
+                break;
+            case 3:
+                $image_wp = imagecreatetruecolor($new_width, $new_height);
+                $image = imagecreatefrompng($imgsrc);
+                imagesavealpha($image, true);
+                imagealphablending($image_wp, false);
+                imagesavealpha($image_wp, true);
+                imagecopyresampled($image_wp, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                imagepng($image_wp, $imgdst);
+                imagedestroy($image_wp);
+                break;
+        }
+
+    }
+}
+if (!function_exists('check_gifcartoon')) {
+    function check_gifcartoon($image_file)
+    {
+        $fp = fopen($image_file, 'rb');
+        $image_head = fread($fp, 1024);
+        fclose($fp);
+        return true;
+    }
+}
+if (!function_exists('guard_prefix')) {
+    function guard_prefix()
+    {
+        return empty(getenv('guard')) ? 'user' : current(explode(".", getenv('guard')));
+    }
+}
+if (!function_exists('get_nav')) {
+    function get_nav()
+    {
+        $route_name = request()->route()->getName();
+        $nav = app(\App\Repositories\Eloquent\NavRepository::class)->where('slug',$route_name)->first();
+        return $nav;
+    }
+}
+if (!function_exists('num_to_eng')) {
+    function num_to_eng_tab($num)
+    {
+        $eng = ['one','two','three','four','five'];
+        return $eng[$num].'-tab';
+    }
 }

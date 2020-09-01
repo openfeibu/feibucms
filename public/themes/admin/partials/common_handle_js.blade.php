@@ -1,8 +1,11 @@
 <script>
-    layui.use(['jquery','element','table'], function() {
+    var active = {};
+    layui.use(['jquery','element','table','laytpl'], function() {
         var table = layui.table;
         var form = layui.form;
+        var laytpl = layui.laytpl;
         var $ = layui.$;
+        var element = layui.element;
         //监听工具条
         table.on('tool(fb-table)', function(obj){
             var data = obj.data;
@@ -10,7 +13,7 @@
             if(obj.event === 'detail'){
                 layer.msg('ID：'+ data.id + ' 的查看操作');
             } else if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
+                layer.confirm('{{ trans('messages.confirm_delete') }}', function(index){
                     layer.close(index);
                     var load = layer.load();
                     $.ajax({
@@ -18,12 +21,17 @@
                         data : data,
                         type : 'delete',
                         success : function (data) {
-                            obj.del();
                             layer.close(load);
+                            if(data.code == 0)
+                            {
+                                obj.del();
+                            }else{
+                                layer.msg(data.message);
+                            }
                         },
                         error : function (jqXHR, textStatus, errorThrown) {
                             layer.close(load);
-                            layer.msg('服务器出错');
+                            $.ajax_error(jqXHR, textStatus, errorThrown);
                         }
                     });
                 });
@@ -32,8 +40,35 @@
                 window.location.href=main_url+'/'+data.id
                 // layer.alert('编辑行：<br>'+ JSON.stringify(data))
             }
+            if(typeof $.extend_tool == 'function'){
+                $.extend_tool(obj);
+            }
         });
-        var $ = layui.$, active = {
+        table.on('edit(fb-table)', function(obj){
+            var data = obj.data;
+            var value = obj.value //得到修改后的值
+                    ,data = obj.data //得到所在行所有键值
+                    ,field = obj.field; //得到字段
+            var ajax_data = {};
+            ajax_data['_token'] = "{!! csrf_token() !!}";
+            ajax_data[field] = value;
+            // 加载样式
+            var load = layer.load();
+            $.ajax({
+                url : main_url+'/'+data.id,
+                data : ajax_data,
+                type : 'PUT',
+                success : function (data) {
+                    layer.close(load);
+                },
+                error : function (jqXHR, textStatus, errorThrown) {
+                    layer.close(load);
+                    $.ajax_error(jqXHR, textStatus, errorThrown);
+                }
+            });
+        });
+        var $ = layui.$;
+        active = {
             reload: function(){
                 var demoReload = $('#demoReload');
                 var where = {};
@@ -47,6 +82,11 @@
                         curr: 1 //重新从第 1 页开始
                     }
                     ,where: where
+                    ,error:function(res, curr, count)
+                    {
+                        console.log(res)
+                        $.ajax_error(jqXHR, textStatus, errorThrown);
+                    }
                 });
             },
             del:function(){
@@ -68,18 +108,23 @@
                                 data :  {'ids':data_id_obj,'_token' : "{!! csrf_token() !!}"},
                                 type : 'POST',
                                 success : function (data) {
-                                    var nPage = $(".layui-laypage-curr em").eq(1).text();
-                                    //执行重载
-                                    table.reload('fb-table', {
-                                        page: {
-                                            curr: nPage //重新从第 1 页开始
-                                        }
-                                    });
                                     layer.close(load);
+                                    if(data.code == 0)
+                                    {
+                                        var nPage = $(".layui-laypage-curr em").eq(1).text();
+                                        //执行重载
+                                        table.reload('fb-table', {
+                                            page: {
+                                                curr: nPage //重新从第 1 页开始
+                                            }
+                                        });
+                                    }else{
+                                        layer.msg(data.message);
+                                    }
                                 },
                                 error : function (jqXHR, textStatus, errorThrown) {
                                     layer.close(load);
-                                    layer.msg('服务器出错');
+                                    $.ajax_error(jqXHR, textStatus, errorThrown);
                                 }
                             });
                         })  ;

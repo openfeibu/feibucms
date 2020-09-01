@@ -8,6 +8,7 @@ use App\Traits\AdminUser\Auth\AuthenticatesUsers;
 use App\Traits\Theme\ThemeAndViews;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Response\Auth\Response as AuthResponse;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -26,6 +27,7 @@ class LoginController extends Controller
 
     use RoutesAndGuards, ThemeAndViews, ValidatesRequests, AuthenticatesUsers;
 
+    protected $redirectTo = '/admin';
 
     /**
      * Create a new controller instance.
@@ -34,9 +36,19 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
         $this->response   = resolve(AuthResponse::class);
         $this->setRedirectTo();
         $this->middleware('guest:' . $this->getGuard(), ['except' => ['logout', 'verify', 'locked', 'sendVerification']]);
         $this->setTheme();
+    }
+
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        return redirect($this->redirectTo);
     }
 }

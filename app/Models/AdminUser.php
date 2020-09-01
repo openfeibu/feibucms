@@ -5,7 +5,7 @@ namespace App\Models;
 use Hash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use App\Models\User;
+use App\Models\Auth as AuthModel;
 use App\Traits\Database\Slugger;
 use App\Traits\Database\DateFormatter;
 use App\Traits\Filer\Filer;
@@ -15,7 +15,7 @@ use App\Traits\Roles\HasRoleAndPermission;
 use App\Contracts\AdminUserPolicy;
 use App\Traits\AdminUser\AdminUser as AdminUserProfile;
 
-class AdminUser extends User implements AdminUserPolicy
+class AdminUser extends AuthModel implements AdminUserPolicy
 {
     use Filer, Notifiable, HasRoleAndPermission, AdminUserProfile, SoftDeletes, Hashids, Slugger, PresentableTrait, DateFormatter;
 

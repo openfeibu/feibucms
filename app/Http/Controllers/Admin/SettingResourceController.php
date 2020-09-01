@@ -57,6 +57,45 @@ class SettingResourceController extends BaseController
                 ->redirect();
         }
     }
+    public function station(Request $request)
+    {
+        $setting_params = $this->repository->where(['category' => 'station'])->get()->toArray();
+        foreach ($setting_params as $key => $param)
+        {
+            if($param['type'] == 'text')
+            {
+                $setting[$param['slug']] = $param['value'];
+            }else if($param['type'] == 'image'){
+                $setting[$param['slug']] = $this->repository->find($param['id']);
+            }
+
+        }
+
+        return $this->response->title('站点信息管理')
+            ->view('setting.station')
+            ->data(compact('setting'))
+            ->output();
+    }
+    public function updateStation(Request $request)
+    {
+        try {
+            $attributes = $request->all();
+            foreach ($attributes as $key => $attribute)
+            {
+                Setting::where('slug',$key)->update(['value' => $attribute]);
+            }
+            return $this->response->message(trans('messages.success.updated'))
+                ->success()
+                ->url(guard_url('setting/station'))
+                ->redirect();
+        } catch (Exception $e) {
+            return $this->response->message($e->getMessage())
+                ->code(400)
+                ->status('error')
+                ->url(guard_url('setting/station'))
+                ->redirect();
+        }
+    }
     public function publicityVideo(Request $request)
     {
         $video_params = $this->repository->where(['category' => 'publicity_video'])->all()->toArray();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Repositories\Eloquent\PermissionRepository;
 use Tree,Auth;
 use App\Http\Controllers\Admin\ResourceController as BaseController;
 use App\Http\Requests\PermissionRequest;
@@ -13,14 +14,7 @@ use App\Models\Permission;
 class PermissionResourceController extends BaseController
 {
 
-    /**
-     * Initialize permission resource controller.
-     *
-     * @param type PermissionRepositoryInterface $permission
-     *
-     * @return null
-     */
-    public function __construct(PermissionRepositoryInterface $permission)
+    public function __construct(PermissionRepository $permission)
     {
         parent::__construct();
         $this->repository = $permission;
@@ -36,7 +30,7 @@ class PermissionResourceController extends BaseController
     public function index(PermissionRequest $request)
     {
         if ($this->response->typeIs('json')) {
-            $data = $this->repository->orderBy('order','asc')->orderBy('id','asc')->all()->toArray();
+            $data = $this->repository->orderBy('order','asc')->orderBy('id','asc')->get()->toArray();
             $data = Tree::getTree($data);
             return $this->response
                 ->success()
@@ -82,8 +76,8 @@ class PermissionResourceController extends BaseController
         $permission = $this->repository->newInstance([]);
         $father = Auth::user()->menus();
 
-        return $this->response->title(trans('app.new') . ' ' . trans('permission.name')) 
-            ->view('permission.create', true) 
+        return $this->response->title(trans('app.new') . ' ' . trans('permission.name'))
+            ->view('permission.create', true)
             ->data(compact('permission','father'))
             ->output();
     }
@@ -99,14 +93,31 @@ class PermissionResourceController extends BaseController
     {
         try {
             $attributes              = $request->all();
-            $attributes['user_id']   = user_id();
-            $attributes['user_type'] = user_type();
             $permission                 = $this->repository->create($attributes);
 
+            if(isset($attributes['subs']) && $attributes['subs'])
+            {
+                $model = str_replace('.index','',$attributes['slug']);
+                $model = str_replace('.show','',$model);
+                $sub_data = [];
+                foreach ($attributes['subs'] as $key => $sub)
+                {
+                    $sub_data[] = [
+                        'slug' => $model.'.'.$key,
+                        'name' => $sub,
+                        'parent_id' => $permission->id,
+                    ];
+                }
+            }
+            if(isset($sub_data))
+            {
+                Permission::insert($sub_data);
+            }
+
             return $this->response->message(trans('messages.success.created', ['Module' => trans('permission.name')]))
-                ->code(204)
+                ->http_code(204)
                 ->status('success')
-                ->url(guard_url('permission/' . $permission->id))
+                ->url(guard_url('permission'))
                 ->redirect();
         } catch (Exception $e) {
             return $this->response->message($e->getMessage())
@@ -203,7 +214,7 @@ class PermissionResourceController extends BaseController
 
             return $this->response->message(trans('messages.success.deleted', ['Module' => trans('permission.name')]))
                 ->status("success")
-                ->code(202)
+                ->http_code(202)
                 ->url(guard_url('permission'))
                 ->redirect();
 
