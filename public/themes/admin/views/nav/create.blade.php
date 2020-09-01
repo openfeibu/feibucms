@@ -29,7 +29,12 @@
                             <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入{{ trans('nav.label.name') }}" class="layui-input" >
                         </div>
                     </div>
-
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{{ trans('nav.label.en_name') }}</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="en_name" lay-verify="required" autocomplete="off" placeholder="请输入{{ trans('nav.label.en_name') }}" class="layui-input" >
+                        </div>
+                    </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">{{ trans('nav.label.slug') }}</label>
                         <div class="layui-input-inline">

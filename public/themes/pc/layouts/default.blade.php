@@ -29,7 +29,7 @@
 <![endif]-->
 <body>
 {!! Theme::partial('header') !!}
-@if(Theme::has('not_banner'))
+@if(!Theme::has('notBanner'))
     {!! Theme::widget('NavBanner')->render() !!}
 @endif
 
