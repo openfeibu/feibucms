@@ -30,10 +30,11 @@
                             </script>
                         </div>
                     </div>
+
                     <div class="layui-form-item">
-                        <label class="layui-form-label">是否推荐</label>
+                        <label class="layui-form-label">首页推荐</label>
                         <div class="layui-input-block">
-                            <input type="checkbox" name="home_recommend" lay-skin="switch" lay-text="首页|否" @if($page->home_recommend) checked @endif >
+                            <input type="checkbox" name="home_recommend" lay-skin="switch" lay-text="是|否" @if($page->home_recommend) checked @endif value="1">
                         </div>
                     </div>
                     <div class="layui-form-item">

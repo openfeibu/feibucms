@@ -24,7 +24,7 @@ class NewsResourceController extends BaseController
                                 PageCategoryRepositoryInterface $category)
     {
         parent::__construct($page,$category);
-        $this->category_slug = $this->main_url = 'news';
+        $this->category_slug = $this->main_url = $this->view_folder= 'news';
         $category_data = $category->where(['slug' => $this->category_slug])->first();
         $this->category_data = $category_data;
         $this->category_id = $category_data['id'];
