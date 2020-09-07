@@ -33,8 +33,7 @@ return [
         'guarded'      => ['*'],
         'slugs'        => ['slug' => 'name'],
         'dates'        => ['deleted_at'],
-        'fillable'     => ['heading', 'meta_title', 'meta_keyword','name','title', 'category_id','slug', 'order', 'view', 'compile', 'status',
-                           'upload_folder', 'image','description','content',  'abstract','recommend_type'],
+        'fillable'     => ['heading', 'meta_title', 'meta_keyword','name','title', 'category_id','slug', 'order', 'view', 'compile', 'status','upload_folder', 'image','description','content',  'abstract','recommend_type','home_recommend','hot_recommend'],
         'translate'    => ['name', 'heading', 'content', 'meta_title', 'meta_keyword', 'meta_description'],
         'upload_folder' => '/page/page',
         'uploads'      => [
