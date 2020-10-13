@@ -34,7 +34,7 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { color: #
     -moz-transition: all 0.2s; /* Firefox 4 */
     -webkit-transition: all 0.2s; /* Safari 和 Chrome */
     -o-transition: all 0.2s; /* Opera */
-}
+}	
 .transition500{
     transition: all 0.5s;
     -moz-transition: all 0.5s; /* Firefox 4 */
@@ -87,15 +87,17 @@ input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { color: #
 }
 
 .w1400{max-width: 1400px;margin: 0 auto;}
-header{height: 100px;}
+header{height: 80px;}
 
 .headerBg{background-color:rgba(7, 9, 28, 0.08);height: 100%;}
 header .logo{width: 120px;padding-top: 23px;}
-header .newLogo{width:180px;padding-top:40px;}
+header .newLogo{width:180px;padding-top:20px;}
 header .logo1{display: block;}
 header .logo2{display: none;}
 header .logo img{width: 90%;}
-.headerRight{width: 80%;margin-top: 30px;}
+header .tell{float:left;width:30px;height:50px;background:url("../images/tel.png") no-repeat center / 30px auto;margin-right:10px}
+header.active .tell{background:url("../images/tel-active.png") no-repeat center / 30px auto}
+.headerRight{width: 80%;margin-top: 20px;}
 header .nav{width: 80%;}
 header .nav ul{width: 100%;height: 50px;line-height: 50px;}
 header .nav li{float: left;width: 12.5%;text-align: center;position: relative;}
@@ -109,8 +111,8 @@ header .nav ul li dl dd a{color: #333;}
 header .nav ul li dl dd a:hover{color: #4083ff !important;}
 
 header.active{height: 60px;}
-header.active .logo{padding-top:5px;width: 110px;}
-header.active .logo{padding-top:20px;width: 160px;}
+
+header.active .logo{padding-top:10px;width: 160px;}
 header.active .headerRight{margin-top:5px}
 
 #allmap{margin-top:100px;height:300px;border-radius:10px;box-shadow:0 5px 10px #eee;border:1px solid #eee}
@@ -131,17 +133,17 @@ header.active .headerRight{margin-top:5px}
 .headerBg.active .logo2,.headerBg.fixedActive .logo2{display:block;}
 .headerBg.active .nav li a,.headerBg.fixedActive .nav li a{color: #000;}
 .headerBg.active .lang,.headerBg.fixedActive .lang{color: #666;}
-.headerBg .lang{height: 50px;line-height: 50px;color: #fff;font-size: 16px;margin-left: 20px;cursor: pointer;;}
+.headerBg .lang{height: 50px;line-height: 50px;color: #fff;font-size: 20px;margin-left: 20px;cursor: pointer;;}
 
 /* 关于我们 */
-.about,.product,.innovate,.new{
-    margin: 125px 0;
+.about,.product,.new{
+    margin: 100px 0;
 }
 .branch{
     margin: 120px 0;
 }
 .about-left{position: relative;}
-.about-left img{width: 100%;}
+.about-left video{width: 100%;}
 .about-left .vr-text{position: absolute;width: 100%;top: 30%;text-align: center;}
 .about-left .vr-text .img{width: 117px;margin:0 auto;}
 .about-left .vr-text .img img{width: 100%;}
@@ -181,6 +183,7 @@ header.active .headerRight{margin-top:5px}
 .about-icon li p{color: #333;font-size: 18px;margin-top: 10px;}
 
 /* 产品中心 */
+.case-bg{    background-color: #f9f9f9;padding:80px 0 30px 0}
 .product-con{margin-top: 50px;}
 .product-item:hover p{color: #4083ff;}
 .product-item-box{padding: 0 18px;border:1px solid #F3F3F3;box-shadow: 0 5px 20px #efefef;text-align: center;}

@@ -13,54 +13,133 @@
 <div class="about">
     <div class="container w1400">
         <div class="about-left col-lg-6 col-md-6 col-sm-12 wow fadeInUp animated" data-wow-duration=".6s" data-wow-delay=".3s">
-            <a href="{{ setting('vr') }}" target="_blank">
-                <img class="transition" src="{!! theme_asset('images/vrBg.png') !!}" alt="" />
-                <div class="vr-text" >
-                    <div class="img animated fb-bounceIn " style='animation-iteration-count: infinite;'><img src="{!! theme_asset('images/VR.png') !!}" alt=""></div>
-                    <span>溢多利集团720°全景展示</span>
-                </div>
-            </a>
+           
+				<video id="fbVideo" controls src="{!! theme_asset('images/video.mp4') !!}" poster="{!! theme_asset('images/videoBg.jpg') !!}" ></video>
+				
+              
         </div>
         <div class="about-right col-lg-6 col-md-6 col-sm-12">
             <div class="con-title wow fadeInUp animated" data-wow-duration=".6s" data-wow-delay=".4s">
-                <span class="transition500">About VTR</span>
-                <h1>广东溢多利生物科技股份有限公司</h1>
+                <span class="transition500">About FeiBu</span>
+                <h1>广州飞步信息科技有限公司</h1>
             </div>
             <div class="about-con  wow fadeInUp animated" data-wow-duration=".6s" data-wow-delay=".5s">
-                广东溢多利生物科技股份有限公司成立于1991年，总部位于广东省珠海市。公司专注于生物工程领域，围绕生物医药和生物农牧两大产业，研发并形成了生物酶制剂、甾体激素原料药、功能性饲料添加剂三大系列产品线，同时为行业客户持续提供整体生物技术解决方案，是我国生物酶制剂行业首家上市企业，全球极具竞争力的甾体激素医药企业。
+                广州飞步信息科技有限公司，成立于2016年，公司专注于互联网产品开发及计算机网系统工程服务。在信息化时代日渐成熟的同时，我们敢于创新，不断前行。依托珠三角地区庞大、前沿的教育环境，公司致力研发符合相关单位使用的各大中小型系统及便民论坛。其中“三二分段招生系统”于2016年开发并获得相关软件著作权。本系统是完全按照广东省教育厅高职衔接三二分段招生业务而展开的，面向高职院校，对口中职老师及同学使用。
             </div>
-            <ul class="about-icon wow fadeInUp animated" data-wow-duration=".6s" data-wow-delay=".6s">
-                <li class="col-lg-1-5 col-md-1-5 col-sm-1-5 col-xs-1-5">
-                    <a href="/about/profile">
-                        <img class="transition500" src="{!! theme_asset('images/i1.png') !!}" alt="">
-                        <p>企业概况</p>
-                    </a>
-                </li>
-                <li class="col-lg-1-5 col-md-1-5 col-sm-1-5 col-xs-1-5">
-                    <a href="/about/profile/170">
-                        <img class="transition500" src="{!! theme_asset('images/i3.png') !!}" alt="">
-                        <p>产业布局</p>
-                    </a>
-                </li>
-                <li class="col-lg-1-5 col-md-1-5 col-sm-1-5 col-xs-1-5">
-                    <a href="/course/development_course">
-                        <img class="transition500" src="{!! theme_asset('images/i4.png') !!}" alt="">
-                        <p>发展历程</p>
-                    </a>
-                </li>
-                <li class="col-lg-1-5 col-md-1-5 col-sm-1-5 col-xs-1-5">
-                    <a href="/course/enterprise_honor">
-                        <img class="transition500" src="{!! theme_asset('images/i5.png') !!}" alt="">
-                        <p>企业荣誉</p>
-                    </a>
-                </li>
-                <li class="col-lg-1-5 col-md-1-5 col-sm-1-5 col-xs-1-5">
-                    <a href="/news_center/video">
-                        <img class="transition500" src="{!! theme_asset('images/i2.png') !!}" alt="">
-                        <p>宣传视频</p>
-                    </a>
-                </li>
-            </ul>
+			<div class="more wow fadeInUp animated" data-wow-duration="1s" data-wow-delay=".5s"><a href="#">MORE</a></div>
+        </div>
+    </div>
+</div>
+<!-- an li -->
+<div class="case">
+    <div class="case-bg">
+        <div class="container w1400">
+            <div class="con-title tip-title wow fadeInUp animated" data-wow-duration=".6s" data-wow-delay=".3s">
+                <span  class="transition500">CASE</span>
+                <h1>案例中心</h1>
+            </div>
+            <div class="page-product-con clearfix wow fadeInUp animated" data-wow-duration=".6s" data-wow-delay=".5s">
+				
+					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
+						<a href="#" target="_blank">
+							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
+							<div class="test transition">
+
+								<div class="title fb-overflow-1">
+									案例中心
+								</div>
+
+							</div>
+						</a>
+					</div>
+					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
+						<a href="#" target="_blank">
+							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
+							<div class="test transition">
+
+								<div class="title fb-overflow-1">
+									案例中心
+								</div>
+
+							</div>
+						</a>
+					</div>
+					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
+						<a href="#" target="_blank">
+							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
+							<div class="test transition">
+
+								<div class="title fb-overflow-1">
+									案例中心
+								</div>
+
+							</div>
+						</a>
+					</div>
+					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
+						<a href="#" target="_blank">
+							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
+							<div class="test transition">
+
+								<div class="title fb-overflow-1">
+									案例中心
+								</div>
+
+							</div>
+						</a>
+					</div>
+					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
+						<a href="#" target="_blank">
+							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
+							<div class="test transition">
+
+								<div class="title fb-overflow-1">
+									案例中心
+								</div>
+
+							</div>
+						</a>
+					</div>
+					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
+						<a href="#" target="_blank">
+							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
+							<div class="test transition">
+
+								<div class="title fb-overflow-1">
+									案例中心
+								</div>
+
+							</div>
+						</a>
+					</div>
+					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
+						<a href="#" target="_blank">
+							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
+							<div class="test transition">
+
+								<div class="title fb-overflow-1">
+									案例中心
+								</div>
+
+							</div>
+						</a>
+					</div>
+					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
+						<a href="#" target="_blank">
+							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
+							<div class="test transition">
+
+								<div class="title fb-overflow-1">
+									案例中心
+								</div>
+
+							</div>
+						</a>
+					</div>
+					
+				
+				
+			</div>
         </div>
     </div>
 </div>
@@ -84,7 +163,7 @@
                     <div class="number">
                         <span >1</span>所
                     </div>
-                    <div class="name">院士工作站</div>
+                    <div class="name"></div>
                 </div>
                 <div class="innovate-item col-lg-3 col-md-3 col-sm-6 col-xs-6 wow bounceIn animated" data-wow-duration=".6s" data-wow-delay="0.6s">
                     <div class="number">
@@ -184,5 +263,9 @@
             pagination: '.swiper-pagination-banner',
             paginationClickable :true
         })
+		$(".fbVideo-btn").on("click",function(){
+			$("#fbVideo")[0].play();
+			$(this).hide();
+		})
     })
 </script>

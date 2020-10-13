@@ -5,19 +5,15 @@
                 <a href="{{ route('pc.home') }}">
                     <h1 hidden="">{{ setting('station_name') }}</h1>
                     <img class="logo1 " src="{{ '/image/original'.setting('logo') }}" alt="{{ setting('station_name') }}" class="block">
-                    <img class="logo2 " src="{{ '/image/original'.setting('logo') }}" alt="{{ setting('station_name') }}" class="block">
+                    <img class="logo2 " src="{!! theme_asset('images/fblogo.png') !!}" alt="{{ setting('station_name') }}" class="block">
                 </a>
             </div>
             <div class="headerRight pull-right transition500">
                 <div class="lang pull-right">
                     <div class="lang-con">
-                        Language<span class="caret"></span>
+                        <span class="tell  tada animated infinite"></span>13794420683
                     </div>
-                    <dl>
-                        <dd class="active"><a href="/">中文</a></dd>
-                        <dd><a href="http://intl.yiduoli.com/">English</a></dd>
-                    </dl>
-
+                   
                 </div>
                 <div class="nav pull-right">
                     <ul>
