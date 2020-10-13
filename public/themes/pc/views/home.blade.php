@@ -26,7 +26,7 @@
             <div class="about-con  wow fadeInUp animated" data-wow-duration=".6s" data-wow-delay=".5s">
                 广州飞步信息科技有限公司，成立于2016年，公司专注于互联网产品开发及计算机网系统工程服务。在信息化时代日渐成熟的同时，我们敢于创新，不断前行。依托珠三角地区庞大、前沿的教育环境，公司致力研发符合相关单位使用的各大中小型系统及便民论坛。其中“三二分段招生系统”于2016年开发并获得相关软件著作权。本系统是完全按照广东省教育厅高职衔接三二分段招生业务而展开的，面向高职院校，对口中职老师及同学使用。
             </div>
-			<div class="more wow fadeInUp animated" data-wow-duration="1s" data-wow-delay=".5s"><a href="#">MORE</a></div>
+			<div class="more wow fadeInUp animated col-lg-3 col-md-3 col-sm-6" data-wow-duration="1s" data-wow-delay=".5s"><a href="#">MORE</a></div>
         </div>
     </div>
 </div>
@@ -44,7 +44,6 @@
 						<a href="#" target="_blank">
 							<div class="img "><img class="transition500" src="{!! $case->image_url !!}" alt=""></div>
 							<div class="test transition">
-
 								<div class="title fb-overflow-1">
 									{{ $case->title }}
 								</div>

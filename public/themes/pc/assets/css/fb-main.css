@@ -181,6 +181,8 @@ header.active .headerRight{margin-top:5px}
 .about-icon li{text-align: center;padding:0 20px !important}
 .about-icon li img{width: 100%;}
 .about-icon li p{color: #333;font-size: 18px;margin-top: 10px;}
+.about-right .more{height:40px;line-height:40px;background:#349fff;text-align:center;border-radius:40px;margin-top:20px}
+.about-right .more a{color:#fff;font-size:14px;display:block;}
 
 /* 产品中心 */
 .case-bg{    background-color: #f9f9f9;padding:80px 0 30px 0}
@@ -707,11 +709,13 @@ header.active .headerRight{margin-top:5px}
     @media only screen and (min-width:561px) {html {font-size:545%!important}}
     @media only screen and (min-width:641px) {html {font-size:625%!important}}
     .about,.product,.branch,.innovate{margin: 0.8rem 0;}
+	.case-bg{padding:0.8rem 0 0.3rem 0;}
     .new{margin:0.8rem 0 0  0}
     .branch{margin: 0.8rem 0;}
 
     .about-left{padding: 0;}
     .about-right{margin-top: 0.5rem;padding: 0;}
+	.about-right .more{height:0.8rem;line-height:0.8rem;font-size:0.36rem;}
     .con-title{height: 1rem;}
     .con-title h1{font-size: 0.36rem;line-height: 1rem;}
     .con-title span{font-size: 1rem;top: -0.2rem;line-height: 1rem;}
