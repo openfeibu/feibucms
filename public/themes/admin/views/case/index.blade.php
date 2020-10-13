@@ -51,6 +51,7 @@
                 ,{field:'title',title:'标题', width:200}
                 ,{field:'image',title:'封面', toolbar:'#imageTEM',}
                 ,{field:'category_name',title:'分类', width:200}
+                ,{field:'home_recommend',title:'首页推荐', width:200,toolbar:'#checkboxTEM' }
                 ,{field:'score',title:'操作', width:200, align: 'right',toolbar:'#barDemo'}
             ]]
             ,id: 'fb-table'

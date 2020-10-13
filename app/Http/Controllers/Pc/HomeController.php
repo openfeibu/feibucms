@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pc;
 
+use App\Models\PageCategory;
 use Illuminate\Http\Request;
 use Route,Auth;
 use App\Models\Banner;
@@ -21,11 +22,12 @@ class HomeController extends BaseController
      */
     public function home(Request $request)
     {
+        $case_category_ids = PageCategory::where('parent_id',3)->pluck('id')->toArray();
         $banners = Banner::orderBy('order','asc')->orderBy('id','asc')->get();
         return $this->response->title('首页')
             ->layout('home')
             ->view('home')
-            ->data(compact('banners'))
+            ->data(compact('banners','case_category_ids'))
             ->output();
     }
 

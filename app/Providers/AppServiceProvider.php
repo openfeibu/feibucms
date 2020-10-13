@@ -71,7 +71,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('page_repository',function($app){
             return new \App\Repositories\Eloquent\PageRepository($app);
         });
-
+        $this->app->bind('link_repository',function($app){
+            return new \App\Repositories\Eloquent\LinkRepository($app);
+        });
         $this->app->singleton('image', function ($app) {
             return new ImageManager($app['config']->get('image'));
         });

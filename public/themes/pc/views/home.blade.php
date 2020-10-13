@@ -39,106 +39,20 @@
                 <h1>案例中心</h1>
             </div>
             <div class="page-product-con clearfix wow fadeInUp animated" data-wow-duration=".6s" data-wow-delay=".5s">
-				
+                @foreach(app('page_repository')->whereIn('category_id',$case_category_ids)->where('home_recommend',1)->orderBy('created_at','desc')->limit(8)->get() as $key => $case)
 					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
 						<a href="#" target="_blank">
-							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
+							<div class="img "><img class="transition500" src="{!! $case->image_url !!}" alt=""></div>
 							<div class="test transition">
 
 								<div class="title fb-overflow-1">
-									案例中心
+									{{ $case->title }}
 								</div>
 
 							</div>
 						</a>
 					</div>
-					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
-						<a href="#" target="_blank">
-							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
-							<div class="test transition">
-
-								<div class="title fb-overflow-1">
-									案例中心
-								</div>
-
-							</div>
-						</a>
-					</div>
-					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
-						<a href="#" target="_blank">
-							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
-							<div class="test transition">
-
-								<div class="title fb-overflow-1">
-									案例中心
-								</div>
-
-							</div>
-						</a>
-					</div>
-					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
-						<a href="#" target="_blank">
-							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
-							<div class="test transition">
-
-								<div class="title fb-overflow-1">
-									案例中心
-								</div>
-
-							</div>
-						</a>
-					</div>
-					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
-						<a href="#" target="_blank">
-							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
-							<div class="test transition">
-
-								<div class="title fb-overflow-1">
-									案例中心
-								</div>
-
-							</div>
-						</a>
-					</div>
-					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
-						<a href="#" target="_blank">
-							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
-							<div class="test transition">
-
-								<div class="title fb-overflow-1">
-									案例中心
-								</div>
-
-							</div>
-						</a>
-					</div>
-					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
-						<a href="#" target="_blank">
-							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
-							<div class="test transition">
-
-								<div class="title fb-overflow-1">
-									案例中心
-								</div>
-
-							</div>
-						</a>
-					</div>
-					<div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
-						<a href="#" target="_blank">
-							<div class="img "><img class="transition500" src="{!! theme_asset('images/videoBg.jpg') !!}" alt=""></div>
-							<div class="test transition">
-
-								<div class="title fb-overflow-1">
-									案例中心
-								</div>
-
-							</div>
-						</a>
-					</div>
-					
-				
-				
+                 @endforeach
 			</div>
         </div>
     </div>
@@ -253,7 +167,33 @@
         </div>
     </div>
 </div>
+<!-- an li -->
+<div class="case">
+    <div class="case-bg">
+        <div class="container w1400">
+            <div class="con-title tip-title wow fadeInUp animated" data-wow-duration=".6s" data-wow-delay=".3s">
+                <span  class="transition500">PARTNERS</span>
+                <h1>合作伙伴</h1>
+            </div>
+            <div class="page-product-con clearfix wow fadeInUp animated" data-wow-duration=".6s" data-wow-delay=".5s">
+                @foreach(app('link_repository')->orderBy('order','asc')->orderBy('id','asc')->limit(8)->get() as $key => $link)
+                    <div class="page-product-item clearfix col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                        <a href="#" target="_blank">
+                            <div class="img "><img class="transition500" src="/image/original/{!! $link->image !!}" alt=""></div>
+                            <div class="test transition">
 
+                                <div class="title fb-overflow-1">
+                                    {{ $link->name }}
+                                </div>
+
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(function() {
         var mySwiper = new Swiper('.swiper-container-banner', {
