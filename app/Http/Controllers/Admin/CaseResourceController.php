@@ -23,6 +23,7 @@ class CaseResourceController extends BaseController
         $this->request = $request;
         $this->category_slug = 'case';
         $this->main_url = 'case/case';
+        $this->view_folder = 'case';
         if($category_name = $this->request->input('category_name',''))
         {
             $this->category_slug = $category_name;
