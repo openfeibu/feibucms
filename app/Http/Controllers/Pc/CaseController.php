@@ -61,8 +61,8 @@ class CaseController extends BaseController
     {
         $page = $case;
         return $this->response->title($page['title'])
-            ->setNotBanner(true)
-            ->view('product.show')
+            //->setNotBanner(true)
+            ->view('case.show')
             ->data(compact('page'))
             ->output();
     }
