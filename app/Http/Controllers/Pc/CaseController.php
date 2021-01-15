@@ -57,9 +57,9 @@ class CaseController extends BaseController
             ->output();
     }
 
-    public function show(Request $request ,Page $product)
+    public function show(Request $request ,Page $case)
     {
-        $page = $product;
+        $page = $case;
         return $this->response->title($page['title'])
             ->setNotBanner(true)
             ->view('product.show')
